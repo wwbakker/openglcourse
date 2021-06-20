@@ -4,6 +4,7 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.util.Log
+import nl.wwbakker.android.app.shapes.Cube3d
 import nl.wwbakker.android.app.shapes.EllipseAssignment2D
 import nl.wwbakker.android.app.shapes.Pyramid3d
 import javax.microedition.khronos.egl.EGLConfig
@@ -16,12 +17,15 @@ class MyRenderer : GLSurfaceView.Renderer {
     private val mViewMatrix = FloatArray(16) //view matrix
     private val mMVMatrix = FloatArray(16) //model view matrix
     private val mModelMatrix = FloatArray(16) //model  matrix
+    private val rotationMatrix = FloatArray(16)
+    private val rotationMatrix2 = FloatArray(16)
+
     private lateinit var shape : Shape
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        shape = Pyramid3d()
+        shape = Cube3d()
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
@@ -33,6 +37,7 @@ class MyRenderer : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(unused: GL10) {
+
         // Draw background color
         GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
         GLES32.glClearDepthf(1.0f) //set up the depth buffer
@@ -53,6 +58,10 @@ class MyRenderer : GLSurfaceView.Renderer {
         ) //head is down (set to (0,1,0) to look from the top)
         Matrix.translateM(mModelMatrix, 0, 0.0f, 0.0f, -5f) //move backward for 5 units
         // Calculate the projection and view transformation
+        Matrix.setRotateM(rotationMatrix, 0, 30f, 0f,0f,1f )
+        Matrix.setRotateM(rotationMatrix2, 0, 30f, 0f,1f,0f )
+        Matrix.multiplyMM(mModelMatrix, 0, mModelMatrix, 0, rotationMatrix, 0)
+        Matrix.multiplyMM(mModelMatrix, 0, mModelMatrix, 0, rotationMatrix2, 0)
         //calculate the model view matrix
         Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mModelMatrix, 0)
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0)

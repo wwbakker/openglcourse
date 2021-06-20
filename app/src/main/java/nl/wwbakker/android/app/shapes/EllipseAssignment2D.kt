@@ -2,7 +2,7 @@ package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
 import nl.wwbakker.android.app.Shape
-import nl.wwbakker.android.app.Vertices
+import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndSingleColorShaders
 import kotlin.math.PI
 import kotlin.math.cos

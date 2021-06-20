@@ -1,4 +1,4 @@
-package nl.wwbakker.android.app
+package nl.wwbakker.android.app.data
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
