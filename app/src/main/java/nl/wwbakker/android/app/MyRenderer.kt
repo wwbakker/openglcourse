@@ -4,9 +4,7 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.util.Log
-import nl.wwbakker.android.app.shapes.Cube3d
-import nl.wwbakker.android.app.shapes.EllipseAssignment2D
-import nl.wwbakker.android.app.shapes.Pyramid3d
+import nl.wwbakker.android.app.shapes.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -25,7 +23,7 @@ class MyRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        shape = Cube3d()
+        shape = PentagonPrism()
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
