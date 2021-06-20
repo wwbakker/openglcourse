@@ -1,12 +1,14 @@
-package nl.wwbakker.android.app
+package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
+import nl.wwbakker.android.app.MyRenderer
+import nl.wwbakker.android.app.Shape
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
 
-class Triangle {
+class Triangle : Shape {
     private val vertexShaderCode =
         """attribute vec3 aVertexPosition;
            uniform mat4 uMVPMatrix;
@@ -57,9 +59,9 @@ class Triangle {
     }
 
 
-    fun draw(mvpMatrix: FloatArray?) {
+    override fun draw(uMvpMatrix: FloatArray) {
         // Apply the projection and view transformation
-        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
+        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, uMvpMatrix, 0)
         MyRenderer.checkGlError("glUniformMatrix4fv")
         //set the attribute of the vertex to point to the vertex buffer
         GLES32.glVertexAttribPointer(

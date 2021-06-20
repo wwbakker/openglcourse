@@ -4,6 +4,8 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.util.Log
+import nl.wwbakker.android.app.shapes.EllipseAssignment2D
+import nl.wwbakker.android.app.shapes.Pyramid3d
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -14,15 +16,12 @@ class MyRenderer : GLSurfaceView.Renderer {
     private val mViewMatrix = FloatArray(16) //view matrix
     private val mMVMatrix = FloatArray(16) //model view matrix
     private val mModelMatrix = FloatArray(16) //model  matrix
-    private var mtriangle: Triangle? = null
-    private var ellipseAssignment : EllipseAssignment2D? = null
+    private lateinit var shape : Shape
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        mtriangle = Triangle()
-        ellipseAssignment = EllipseAssignment2D()
-
+        shape = Pyramid3d()
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
@@ -57,8 +56,7 @@ class MyRenderer : GLSurfaceView.Renderer {
         //calculate the model view matrix
         Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mModelMatrix, 0)
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0)
-//        mtriangle?.draw(mMVPMatrix)
-        ellipseAssignment?.draw(mMVPMatrix)
+        shape.draw(mMVPMatrix)
     }
 
     companion object {

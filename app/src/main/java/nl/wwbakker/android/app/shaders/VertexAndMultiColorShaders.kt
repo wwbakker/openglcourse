@@ -1,62 +1,69 @@
-package nl.wwbakker.android.app
+package nl.wwbakker.android.app.shaders
 
 import android.opengl.GLES32
-import java.nio.FloatBuffer
+import nl.wwbakker.android.app.MyRenderer
+import nl.wwbakker.android.app.ShaderCompileHelper
+import nl.wwbakker.android.app.Vertices
 
-class SimpleVertexAndColorShaders {
+class VertexAndMultiColorShaders {
     private val vertexShaderCode =
         """attribute vec3 aVertexPosition;
+           attribute vec4 aVertexColor;
            uniform mat4 uMVPMatrix;
+           varying vec4 vColor;
            void main() {
                gl_Position = uMVPMatrix *vec4(aVertexPosition,1.0);
+               vColor = aVertexColor;
                gl_PointSize = 3.0;
            }""".trimIndent()
     private val fragmentShaderCode =
         """precision mediump float;
-           uniform vec4 uColor;
+           varying vec4 vColor;
            void main() {
-                gl_FragColor = uColor;
+                gl_FragColor = vColor;
            }""".trimIndent()
-
-    private val vertexStride = COORDS_PER_VERTEX * 4 // 4 bytes per vertex
 
     private val mProgram: Int =
         ShaderCompileHelper.createProgram(vertexShaderCode, fragmentShaderCode)
     private val mPositionHandle: Int
     private val mMVPMatrixHandle: Int
-    private val uColorHandle: Int
+    private val mColorHandle: Int
 
     init {
         GLES32.glUseProgram(mProgram)  // Add program to OpenGL environment
-        uColorHandle = GLES32.glGetUniformLocation(mProgram, "uColor")
         mPositionHandle = GLES32.glGetAttribLocation(mProgram, "aVertexPosition")
         // Enable a handle to the vertices
         GLES32.glEnableVertexAttribArray(mPositionHandle)
+
+        mColorHandle = GLES32.glGetAttribLocation(mProgram, "aVertexColor")
+        // Enable a handle to the vertices
+        GLES32.glEnableVertexAttribArray(mColorHandle)
+
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES32.glGetUniformLocation(mProgram, "uMVPMatrix")
         MyRenderer.checkGlError("glGetUniformLocation")
     }
 
-    fun setColorInput(r : Float, g : Float, b: Float, a : Float) {
-        GLES32.glUniform4f(uColorHandle, r, g, b, a)
-        MyRenderer.checkGlError("glUniform4f")
-
+    fun setColorInput(vertices: Vertices) {
+        //set the attribute of the vertex to point to the vertex buffer
+        GLES32.glVertexAttribPointer(
+            mColorHandle, vertices.valuesPerVertex,
+            GLES32.GL_FLOAT, false, vertices.vertexStride, vertices.vertexBuffer
+        )
+        MyRenderer.checkGlError("glVertexAttribPointer")
     }
-    fun setMatrixInput(mvpMatrix : FloatArray) {
+    fun setModelViewPerspectiveInput(mvpMatrix : FloatArray) {
         GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
         MyRenderer.checkGlError("glUniformMatrix4fv")
     }
 
-    fun setVertexInput(vertexBuffer : FloatBuffer) {
+    fun setPositionInput(vertices: Vertices) {
         //set the attribute of the vertex to point to the vertex buffer
         GLES32.glVertexAttribPointer(
-            mPositionHandle, COORDS_PER_VERTEX,
-            GLES32.GL_FLOAT, false, vertexStride, vertexBuffer
+            mPositionHandle, vertices.valuesPerVertex,
+            GLES32.GL_FLOAT, false, vertices.vertexStride, vertices.vertexBuffer
         )
         MyRenderer.checkGlError("glVertexAttribPointer")
     }
 
-    companion object {
-        val COORDS_PER_VERTEX = 3
-    }
 }
