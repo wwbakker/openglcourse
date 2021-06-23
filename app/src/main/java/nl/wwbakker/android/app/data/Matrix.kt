@@ -33,9 +33,9 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
             }
 
         val simpleModelMatrix =
-            translate(0f, 0f, -5f)
+            translate(z = -5f)
+                .multiply(rotate(30f, z = 1f))
                 .multiply(rotate(30f, y = 1f))
-                .multiply(rotate(30f, x = 1f))
 
         fun simpleProjectionMatrix(width: Int, height : Int) : Matrix {
             return identity().set {
@@ -52,9 +52,9 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
             identity().set { GlMatrix.rotateM(it, 0, degrees, x, y, z) }
 
         fun simpleModelViewProjectionMatrix(projectionMatrix : Matrix) : Matrix =
-            simpleModelMatrix
+            projectionMatrix
                 .multiply(simpleViewMatrix)
-                .multiply(projectionMatrix)
+                .multiply(simpleModelMatrix)
 
     }
 }
