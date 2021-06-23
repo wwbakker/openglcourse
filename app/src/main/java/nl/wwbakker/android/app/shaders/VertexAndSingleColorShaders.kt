@@ -3,6 +3,7 @@ package nl.wwbakker.android.app.shaders
 import android.opengl.GLES32
 import nl.wwbakker.android.app.MyRenderer
 import nl.wwbakker.android.app.ShaderCompileHelper
+import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Vertices
 
 class VertexAndSingleColorShaders {
@@ -42,8 +43,8 @@ class VertexAndSingleColorShaders {
         MyRenderer.checkGlError("glUniform4f")
 
     }
-    fun setModelViewPerspectiveInput(mvpMatrix : FloatArray) {
-        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
+    fun setModelViewPerspectiveInput(mvpMatrix : Matrix) {
+        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix.values, 0)
         MyRenderer.checkGlError("glUniformMatrix4fv")
     }
 

@@ -3,6 +3,7 @@ package nl.wwbakker.android.app.shapes
 import android.opengl.GLES32
 import nl.wwbakker.android.app.Shape
 import nl.wwbakker.android.app.data.Indices
+import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
@@ -68,9 +69,9 @@ class Cube3d : Shape {
         16,17,18,16,18,19,
         20,21,22,20,22,23).toIntArray())
 
-    override fun draw(uMvpMatrix: FloatArray) {
+    override fun draw(projectionMatrix: Matrix) {
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(uMvpMatrix)
+        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

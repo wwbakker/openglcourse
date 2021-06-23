@@ -2,36 +2,27 @@ package nl.wwbakker.android.app
 
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
-import android.opengl.Matrix
 import android.util.Log
+import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.shapes.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
 class MyRenderer : GLSurfaceView.Renderer {
-    private val mMVPMatrix = FloatArray(16) //model view projection matrix
-    private val mProjectionMatrix = FloatArray(16) //projection mastrix
-    private val mViewMatrix = FloatArray(16) //view matrix
-    private val mMVMatrix = FloatArray(16) //model view matrix
-    private val mModelMatrix = FloatArray(16) //model  matrix
-    private val rotationMatrix = FloatArray(16)
-    private val rotationMatrix2 = FloatArray(16)
-
     private lateinit var shape : Shape
+    lateinit var projectionMatrix : Matrix
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        shape = PentagonPrism()
+        shape = CharacterA()
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
         // Adjust the view based on view window changes, such as screen rotation
         GLES32.glViewport(0, 0, width, height)
-        val ratio = width.toFloat() / height
-        val left = -ratio
-        Matrix.frustumM(mProjectionMatrix, 0, left, ratio, -1.0f, 1.0f, 1.0f, 8.0f)
+        projectionMatrix = Matrix.simpleProjectionMatrix(width, height)
     }
 
     override fun onDrawFrame(unused: GL10) {
@@ -41,29 +32,8 @@ class MyRenderer : GLSurfaceView.Renderer {
         GLES32.glClearDepthf(1.0f) //set up the depth buffer
         GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
         GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
-        Matrix.setIdentityM(
-            mMVPMatrix,
-            0
-        ) //set the model view projection matrix to an identity matrix
-        Matrix.setIdentityM(mMVMatrix, 0) //set the model view  matrix to an identity matrix
-        Matrix.setIdentityM(mModelMatrix, 0) //set the model matrix to an identity matrix
-        // Set the camera position (View matrix)
-        Matrix.setLookAtM(
-            mViewMatrix, 0,
-            0.0f, 0f, 1.0f,  //camera is at (0,0,1)
-            0f, 0f, 0f,  //looks at the origin
-            0f, 1f, 0.0f
-        ) //head is down (set to (0,1,0) to look from the top)
-        Matrix.translateM(mModelMatrix, 0, 0.0f, 0.0f, -5f) //move backward for 5 units
-        // Calculate the projection and view transformation
-        Matrix.setRotateM(rotationMatrix, 0, 30f, 0f,0f,1f )
-        Matrix.setRotateM(rotationMatrix2, 0, 30f, 0f,1f,0f )
-        Matrix.multiplyMM(mModelMatrix, 0, mModelMatrix, 0, rotationMatrix, 0)
-        Matrix.multiplyMM(mModelMatrix, 0, mModelMatrix, 0, rotationMatrix2, 0)
-        //calculate the model view matrix
-        Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mModelMatrix, 0)
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0)
-        shape.draw(mMVPMatrix)
+
+        shape.draw(projectionMatrix)
     }
 
     companion object {
