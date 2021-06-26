@@ -33,7 +33,7 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
             }
 
         val simpleModelMatrix =
-            translate(z = -5f)
+            translate(z = -2f)
                 .multiply(rotate(30f, z = 1f))
                 .multiply(rotate(30f, y = 1f))
 

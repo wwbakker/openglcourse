@@ -16,7 +16,7 @@ class MyRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        shape = CharacterA()
+        shape = CharacterS()
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
