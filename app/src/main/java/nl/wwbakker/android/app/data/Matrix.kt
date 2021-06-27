@@ -51,10 +51,10 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
         fun rotate(degrees: Float, x : Float = 0f, y : Float = 0f, z : Float = 0f) : Matrix =
             identity().set { GlMatrix.rotateM(it, 0, degrees, x, y, z) }
 
-        fun simpleModelViewProjectionMatrix(projectionMatrix : Matrix) : Matrix =
+        fun simpleModelViewProjectionMatrix(projectionMatrix : Matrix, modelMatrix : Matrix = simpleModelMatrix) : Matrix =
             projectionMatrix
                 .multiply(simpleViewMatrix)
-                .multiply(simpleModelMatrix)
+                .multiply(modelMatrix)
 
     }
 }
