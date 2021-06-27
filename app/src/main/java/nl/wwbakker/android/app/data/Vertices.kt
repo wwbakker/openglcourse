@@ -73,4 +73,36 @@ class Vertices(val values : FloatArray, val valuesPerVertex : Int) {
         assert(this.valuesPerVertex == other.valuesPerVertex)
         return Vertices(this.values + other.values, valuesPerVertex)
     }
+
+    fun redGreenBlueColors() : Vertices {
+        return Vertices(
+        (0 until vertexCount / 3).flatMap { i ->
+            listOf(
+                1f,0f,0f,1f,
+                0f,1f,0f,1f,
+                0f,0f,1f,1f,
+            )
+        }.toFloatArray(), valuesPerVertex = 4)
+    }
+
+    fun lineIndices() : Indices =
+        Indices((0 until vertexCount)
+            .flatMap { listOf(it, it) }
+            .drop(1)
+            .dropLast(1)
+            .toIntArray())
+
+    fun pointIndices() : Indices =
+        Indices((0 until vertexCount).toList().toIntArray())
+
+    fun printByIndex(indices: Indices) {
+        indices.indexBuffer.array().forEach { index ->
+            println("$index: " + (0 until valuesPerVertex)
+                .joinToString(", ") { v -> getValueSafe((index * valuesPerVertex) + v) })
+        }
+    }
+
+    private fun getValueSafe(i : Int) : String {
+        return if (i < values.size) values[i].toString() else "OOB!"
+    }
 }

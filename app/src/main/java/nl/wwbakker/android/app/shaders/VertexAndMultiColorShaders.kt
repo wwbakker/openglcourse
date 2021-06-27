@@ -15,7 +15,7 @@ class VertexAndMultiColorShaders {
            void main() {
                gl_Position = uMVPMatrix *vec4(aVertexPosition,1.0);
                vColor = aVertexColor;
-               gl_PointSize = 3.0;
+               gl_PointSize = 6.0;
            }""".trimIndent()
     private val fragmentShaderCode =
         """precision mediump float;
