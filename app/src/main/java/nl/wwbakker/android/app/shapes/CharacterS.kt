@@ -54,7 +54,7 @@ class CharacterS : Shape {
 
     val sPlaneFrontIndices = sPlaneFront.rectangleIndices()
     val sPlaneBackIndices = sPlaneBack.rectangleIndices(offset = sPlaneFront.vertexCount)
-    val connectingIndices = positions.connectTwoSidesIndices()//.debugSubArray(12, 12)
+    val connectingIndices = positions.connectTwo2dPlanesIndices()//.debugSubArray(12, 12)
     val indices = sPlaneFrontIndices + sPlaneBackIndices + connectingIndices
 
     val colors = Vertices(/**/

@@ -46,7 +46,7 @@ class Vertices(val values : FloatArray, val valuesPerVertex : Int) {
         return Indices(indices.toIntArray())
     }
 
-    fun connectTwoSidesIndices() : Indices {
+    fun connectTwo2dPlanesIndices() : Indices {
         assert(vertexCount % 2 == 0) {"An extra vertex.. what to do with it?"}
         val otherSideStartIndex = vertexCount / 2
         val indices:  List<Int> =
@@ -67,6 +67,30 @@ class Vertices(val values : FloatArray, val valuesPerVertex : Int) {
         val topIndices =
             bottomIndices.map { it + otherSideStartIndex - 2 }.reversed()
         return Indices((bottomIndices + indices + topIndices).toIntArray())
+    }
+
+    fun connect2LinesClosed() : Indices {
+        assert(vertexCount % 2 == 0) {"An extra vertex.. what to do with it?"}
+        val otherSideStartIndex = vertexCount / 2
+        val indices:  List<Int> =
+            (0 until otherSideStartIndex - 1)
+                .flatMap { i -> listOf(
+                    // rectangle 1
+                    i,
+                    i + otherSideStartIndex,
+                    i + 1,
+
+                    // rectangle 2
+                    i + 1,
+                    i + otherSideStartIndex,
+                    i + otherSideStartIndex + 1,
+                    ) }
+
+        val finalSquareIndices = listOf(
+            otherSideStartIndex - 1, vertexCount - 1, 0,
+            0, vertexCount - 1, otherSideStartIndex)
+
+        return Indices((indices + finalSquareIndices ).toIntArray())
     }
 
     operator fun plus(other : Vertices) : Vertices {

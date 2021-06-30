@@ -66,10 +66,6 @@ class Sphere : Shape {
 
         val indices = sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(60, 0)
 
-//        val colors = positions.redGreenBlueColors()
-
-//        val indices = positions.lineIndices()
-//        val indices = positions.pointIndices()
         positions.printByIndex(indices)
 
         shaders.setColorInput(colors)
@@ -77,7 +73,6 @@ class Sphere : Shape {
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
-//        GLES32.glDrawArrays(GLES32.GL_LINES, 0, positions.vertexCount)
     }
 
 

@@ -32,7 +32,7 @@ class CharacterV : Shape {
 
     val sPlaneFrontIndices = vPlaneFront.rectangleIndices()
     val sPlaneBackIndices = vPlaneBack.rectangleIndices(offset = vPlaneFront.vertexCount)
-    val connectingIndices = positions.connectTwoSidesIndices()
+    val connectingIndices = positions.connectTwo2dPlanesIndices()
     val indices = sPlaneFrontIndices + sPlaneBackIndices + connectingIndices
 
     val colors = Vertices(/**/
