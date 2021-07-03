@@ -38,4 +38,7 @@ object CharacterS : TwoLineShape() {
             )).vertices(10, addFinalVertex = true),
         ).flatten()
 
+    override fun shouldNormalize(): Boolean {
+        return true
+    }
 }

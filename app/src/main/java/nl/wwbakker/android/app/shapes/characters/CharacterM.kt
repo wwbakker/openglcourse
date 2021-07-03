@@ -36,4 +36,8 @@ object CharacterM : TwoLineShape() {
                 .multiply(Matrix.rotate(30f, x = 1f))
                 .multiply(Matrix.rotate(30f, y = 1f))
     }
+
+    override fun shouldNormalize(): Boolean {
+        return true
+    }
 }

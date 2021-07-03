@@ -9,7 +9,7 @@ abstract class TwoLineShape : Shape {
 
     private val shaders = VertexAndMultiColorShaders()
 
-    open fun shouldNormalize() : Boolean { return true }
+    open fun shouldNormalize() : Boolean { return false }
 
     abstract fun leftLine() : List<Position2D>
 
@@ -29,8 +29,8 @@ abstract class TwoLineShape : Shape {
         .toFloatArray()
 
 
-    val frontPlane = Vertices(plane(-0.3f), 3)
-    val backPlane = Vertices(plane(0.3f), 3)
+    val frontPlane = Vertices(plane(-0.2f), 3)
+    val backPlane = Vertices(plane(0.2f), 3)
     val positions = frontPlane + backPlane
 
 

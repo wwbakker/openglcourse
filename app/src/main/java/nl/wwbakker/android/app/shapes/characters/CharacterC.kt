@@ -20,8 +20,5 @@ object CharacterC : TwoLineShape() {
             Position2D(0.25f, 0.3f),
         )
     }
-
-    override fun shouldNormalize(): Boolean {
-        return false
-    }
+    
 }
