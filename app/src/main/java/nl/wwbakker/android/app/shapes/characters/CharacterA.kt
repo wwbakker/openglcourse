@@ -1,4 +1,4 @@
-package nl.wwbakker.android.app.shapes
+package nl.wwbakker.android.app.shapes.characters
 
 import android.opengl.GLES32
 import nl.wwbakker.android.app.Shape

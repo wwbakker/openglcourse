@@ -1,10 +1,9 @@
-package nl.wwbakker.android.app.shapes
+package nl.wwbakker.android.app.shapes.characters
 
 import android.opengl.GLES32
 import nl.wwbakker.android.app.Shape
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
-
 
 class CharacterV : Shape {
 
@@ -17,7 +16,7 @@ class CharacterV : Shape {
         Position2D(0f, 0f),
         Position2D(2f, 2f),
         Position2D(1f, 2f),
-    )
+    ).normalize()
 
 
     fun vPlane(z : Float) = vPlane2d
@@ -25,8 +24,8 @@ class CharacterV : Shape {
         .toFloatArray()
 
 
-    val vPlaneFront = Vertices(vPlane(-0.3f), 3).normalize(x = true, y = true, z = false)
-    val vPlaneBack = Vertices(vPlane(0.3f), 3).normalize(x = true, y = true, z = false)
+    val vPlaneFront = Vertices(vPlane(-0.3f), 3)
+    val vPlaneBack = Vertices(vPlane(0.3f), 3)
     val positions = vPlaneFront + vPlaneBack
 
 
@@ -41,9 +40,9 @@ class CharacterV : Shape {
         , 4)
 
     val modelMatrix =
-        Matrix.translate(z = -1f)
-            .multiply(Matrix.rotate(210f, x = 1f))
+        Matrix.rotate(0f, x = 1f)
             .multiply(Matrix.rotate(-30f, y = 1f))
+            .multiply(Matrix.translate(z = -1f))
 
     override fun draw(projectionMatrix: Matrix) {
         shaders.setColorInput(colors)

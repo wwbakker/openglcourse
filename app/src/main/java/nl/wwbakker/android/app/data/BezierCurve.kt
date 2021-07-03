@@ -2,7 +2,7 @@ package nl.wwbakker.android.app.data
 
 import java.lang.IllegalArgumentException
 
-data class Position2D(val x: Float, val y: Float)
+
 
 
 class BezierCurve(private val controlPoints: List<Position2D>) {

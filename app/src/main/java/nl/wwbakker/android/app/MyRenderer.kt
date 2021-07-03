@@ -4,7 +4,7 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.shapes.*
+import nl.wwbakker.android.app.shapes.characters.*
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -16,7 +16,7 @@ class MyRenderer : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        shape = HalfCone()
+        shape = CharacterI()
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
