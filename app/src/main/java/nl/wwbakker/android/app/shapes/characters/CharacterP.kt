@@ -4,7 +4,7 @@ import nl.wwbakker.android.app.data.BezierCurve
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Position2D
 
-class CharacterP : Character3D() {
+object CharacterP : TwoLineShape() {
 
     override fun leftLine(): List<Position2D> {
         return listOf(

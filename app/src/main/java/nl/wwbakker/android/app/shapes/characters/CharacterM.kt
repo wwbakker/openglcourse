@@ -3,7 +3,7 @@ package nl.wwbakker.android.app.shapes.characters
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Position2D
 
-class CharacterM : Character3D() {
+object CharacterM : TwoLineShape() {
 
     override fun leftLine(): List<Position2D> {
         return listOf(

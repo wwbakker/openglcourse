@@ -8,7 +8,7 @@ import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
 
-class CharacterA : Shape {
+object CharacterA : Shape {
 
     private val shaders = VertexAndMultiColorShaders()
     // initialize vertex byte buffer for shape coordinates

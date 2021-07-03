@@ -5,7 +5,7 @@ import nl.wwbakker.android.app.Shape
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
-abstract class Character3D : Shape {
+abstract class TwoLineShape : Shape {
 
     private val shaders = VertexAndMultiColorShaders()
 

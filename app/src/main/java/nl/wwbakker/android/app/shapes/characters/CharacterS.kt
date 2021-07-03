@@ -3,7 +3,7 @@ package nl.wwbakker.android.app.shapes.characters
 import nl.wwbakker.android.app.data.BezierCurve
 import nl.wwbakker.android.app.data.Position2D
 
-class CharacterS : Character3D() {
+object CharacterS : TwoLineShape() {
 
     override fun leftLine(): List<Position2D> =
         listOf(

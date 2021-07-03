@@ -5,7 +5,7 @@ import nl.wwbakker.android.app.Shape
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
-class CharacterV : Shape {
+object CharacterV : Shape {
 
     private val shaders = VertexAndMultiColorShaders()
 
