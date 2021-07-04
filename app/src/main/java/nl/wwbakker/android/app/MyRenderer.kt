@@ -13,6 +13,7 @@ import javax.microedition.khronos.opengles.GL10
 class MyRenderer : GLSurfaceView.Renderer {
     private val shape = TextScene("IMPERIAL")
     lateinit var projectionMatrix : Matrix
+    var tick = 0L
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         VertexAndMultiColorShaders.initiate()
@@ -34,7 +35,7 @@ class MyRenderer : GLSurfaceView.Renderer {
         GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
         GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
 
-        shape.draw(projectionMatrix)
+        shape.draw(projectionMatrix, tick)
     }
 
     companion object {

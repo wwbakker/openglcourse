@@ -4,9 +4,10 @@ import nl.wwbakker.android.app.shapes.Shape
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.shapes.ShapeWithWidth
 import nl.wwbakker.android.app.shapes.characters.*
+import kotlin.random.Random
 
 
-class TextScene(private val text : String) : Shape {
+class TextScene(private val text : String) {
 
     private val characterMap = mapOf(
         'A' to CharacterA,
@@ -21,8 +22,32 @@ class TextScene(private val text : String) : Shape {
         'V' to CharacterV,
     )
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
-        drawString(text, projectionMatrix, worldMatrix)
+    val r = Random(System.nanoTime())
+    fun randomAxis() : Triple<Float, Float, Float> {
+        val r = Triple(randomN(), randomN(), randomN())
+        return if (r == Triple(0f,0f,0f)) randomAxis() else r
+    }
+    fun randomN() : Float {
+        val f = r.nextFloat()
+        return when {
+            f < 2f / 4f -> 0f
+            f < 3f / 4f -> 1f
+            else -> -1f
+        }
+    }
+
+    var axis = randomAxis()
+
+    fun worldRotation(tick: Long) : Matrix {
+        if (tick % 360L == 0L) {
+            axis = randomAxis()
+            println(axis)
+        }
+        return Matrix.rotate((tick % 360).toFloat(), axis.first, axis.second, axis.third)
+    }
+
+    fun draw(projectionMatrix: Matrix, tick : Long) {
+        drawString(text, projectionMatrix, worldRotation(tick))
     }
 
     private fun drawString(s : String, projectionMatrix: Matrix, worldMatrix: Matrix) {
@@ -38,9 +63,11 @@ class TextScene(private val text : String) : Shape {
             shape.draw(
                 projectionMatrix,
                 worldMatrix =
-                    worldMatrix
-                        .multiply(Matrix.scale(0.3f))
-                        .multiply(Matrix.translate(z = -5f, x = currentX + (shapeWidth / 2f)))
+                Matrix.scale(0.3f)
+                    .multiply(Matrix.translate(z = -5f))
+                    .multiply(worldMatrix)
+                    .multiply(Matrix.translate(x = currentX + (shapeWidth / 2f)))
+
 
             )
             currentX + shapeWidth + kerning

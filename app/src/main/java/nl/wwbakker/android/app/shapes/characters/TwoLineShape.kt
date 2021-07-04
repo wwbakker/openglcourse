@@ -50,7 +50,7 @@ abstract class TwoLineShape : ShapeWithWidth {
 
     val colors = Vertices(/**/
         (0 until frontPlane.vertexCount).map { listOf(1f,1f,1f,1f) }.flatten().toFloatArray() +
-                (0 until backPlane.vertexCount).map { listOf(0.6f,0.6f,0.6f,1f) }.flatten().toFloatArray()
+                (0 until backPlane.vertexCount).map { listOf(0.4f,0.4f,0.4f,1f) }.flatten().toFloatArray()
         , 4)
 
     override fun width() : Float {
