@@ -1,15 +1,17 @@
 package nl.wwbakker.android.app.shapes.characters
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.Shape
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
+import nl.wwbakker.android.app.shapes.ShapeWithWidth
 
-abstract class TwoLineShape : Shape {
+abstract class TwoLineShape : ShapeWithWidth {
 
     private val shaders = VertexAndMultiColorShaders
 
     open fun shouldNormalize() : Boolean { return false }
+
+    open fun shouldCenter() : Boolean { return false }
 
     abstract fun leftLine() : List<Position2D>
 
@@ -19,12 +21,19 @@ abstract class TwoLineShape : Shape {
         return Matrix.identity()
     }
 
-    fun normalizedBothLines() : List<Position2D> {
-        val bothLines = leftLine().zip(rightLine()).flatMap { listOf(it.first, it.second) }
-        return if (shouldNormalize()) bothLines.normalize() else bothLines
-    }
+    private fun normalizedAndCenteredBothLines() : List<Position2D> =
+        leftLine()
+            .zip(rightLine())
+            .flatMap { listOf(it.first, it.second) }
+            .mapIf( shouldNormalize()) { it.normalize() }
+            .mapIf( shouldCenter()) { it.center() }
 
-    fun plane(z : Float) = normalizedBothLines()
+
+    private fun <T> List<T>.mapIf(condition: Boolean, transform: (List<T>) -> List<T>): List<T> =
+        if (condition) transform(this) else this
+
+
+    fun plane(z : Float) = normalizedAndCenteredBothLines()
         .flatMap { listOf(it.x, it.y, z) }
         .toFloatArray()
 
@@ -44,6 +53,10 @@ abstract class TwoLineShape : Shape {
                 (0 until backPlane.vertexCount).map { listOf(0.6f,0.6f,0.6f,1f) }.flatten().toFloatArray()
         , 4)
 
+    override fun width() : Float {
+        val xPoints = normalizedAndCenteredBothLines().map { it.x }
+        return (xPoints.maxByOrNull { it } ?: 0f) - (xPoints.minByOrNull { it } ?: 0f)
+    }
 
     override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         shaders.setColorInput(colors)

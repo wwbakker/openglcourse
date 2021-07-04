@@ -4,14 +4,14 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.scenes.ImperialScene
+import nl.wwbakker.android.app.scenes.TextScene
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
 class MyRenderer : GLSurfaceView.Renderer {
-    private val shape = ImperialScene
+    private val shape = TextScene("IMPERIAL")
     lateinit var projectionMatrix : Matrix
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {

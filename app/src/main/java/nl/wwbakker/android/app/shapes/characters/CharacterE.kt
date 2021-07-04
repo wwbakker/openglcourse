@@ -1,11 +1,11 @@
 package nl.wwbakker.android.app.shapes.characters
 
-import nl.wwbakker.android.app.Shape
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Position2D
+import nl.wwbakker.android.app.shapes.ShapeWithWidth
 
 
-object CharacterE : Shape {
+object CharacterE : ShapeWithWidth {
     object Dash : TwoLineShape() {
         override fun leftLine(): List<Position2D> {
             return listOf(
@@ -25,6 +25,10 @@ object CharacterE : Shape {
     override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         CharacterC.draw(projectionMatrix, worldMatrix)
         Dash.draw(projectionMatrix, worldMatrix)
+    }
+
+    override fun width(): Float {
+        return CharacterC.width()
     }
 
 }

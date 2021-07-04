@@ -1,11 +1,14 @@
 package nl.wwbakker.android.app.shapes.characters
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.Shape
-import nl.wwbakker.android.app.data.*
+import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.Position2D
+import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.data.normalize
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
+import nl.wwbakker.android.app.shapes.ShapeWithWidth
 
-object CharacterV : Shape {
+object CharacterV : ShapeWithWidth {
 
     private val shaders = VertexAndMultiColorShaders
 
@@ -43,6 +46,10 @@ object CharacterV : Shape {
         Matrix.rotate(0f, x = 1f)
             .multiply(Matrix.rotate(-30f, y = 1f))
             .multiply(Matrix.translate(z = -1f))
+
+    override fun width(): Float {
+        return 1f
+    }
 
     override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         shaders.setColorInput(colors)

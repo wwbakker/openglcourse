@@ -1,4 +1,4 @@
-package nl.wwbakker.android.app
+package nl.wwbakker.android.app.shapes
 
 import nl.wwbakker.android.app.data.Matrix
 
