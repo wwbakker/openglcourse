@@ -24,9 +24,9 @@ object CharacterR : Shape {
         }
     }
 
-    override fun draw(projectionMatrix: Matrix) {
-        CharacterP.draw(projectionMatrix)
-        RLeg.draw(projectionMatrix)
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+        CharacterP.draw(projectionMatrix, worldMatrix)
+        RLeg.draw(projectionMatrix, worldMatrix)
     }
 
 }

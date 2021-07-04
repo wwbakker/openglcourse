@@ -60,9 +60,9 @@ class Triangle : Shape {
     }
 
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         // Apply the projection and view transformation
-        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, Matrix.simpleModelViewProjectionMatrix(projectionMatrix).values, 0)
+        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix).values, 0)
         MyRenderer.checkGlError("glUniformMatrix4fv")
         //set the attribute of the vertex to point to the vertex buffer
         GLES32.glVertexAttribPointer(

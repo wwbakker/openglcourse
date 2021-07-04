@@ -4,19 +4,20 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.shapes.characters.*
+import nl.wwbakker.android.app.scenes.ImperialScene
+import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
 class MyRenderer : GLSurfaceView.Renderer {
-    private lateinit var shape : Shape
+    private val shape = ImperialScene
     lateinit var projectionMatrix : Matrix
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
+        VertexAndMultiColorShaders.initiate()
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        shape = CharacterA
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {

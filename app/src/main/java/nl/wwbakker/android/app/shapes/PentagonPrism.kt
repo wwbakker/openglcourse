@@ -9,7 +9,7 @@ import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
 class PentagonPrism : Shape {
 
-    private val shaders = VertexAndMultiColorShaders()
+    private val shaders = VertexAndMultiColorShaders
 
     val points = listOf(
         listOf(0f,1f,1f),
@@ -99,9 +99,10 @@ class PentagonPrism : Shape {
         26,27,28,28,29,26,
         ).toIntArray())
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix))
+        shaders.setModelViewPerspectiveInput(
+            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

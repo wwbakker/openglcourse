@@ -22,9 +22,9 @@ object CharacterE : Shape {
         }
     }
 
-    override fun draw(projectionMatrix: Matrix) {
-        CharacterC.draw(projectionMatrix)
-        Dash.draw(projectionMatrix)
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+        CharacterC.draw(projectionMatrix, worldMatrix)
+        Dash.draw(projectionMatrix, worldMatrix)
     }
 
 }

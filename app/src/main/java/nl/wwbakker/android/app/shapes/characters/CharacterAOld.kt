@@ -10,7 +10,7 @@ import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
 object CharacterAOld : Shape {
 
-    private val shaders = VertexAndMultiColorShaders()
+    private val shaders = VertexAndMultiColorShaders
     // initialize vertex byte buffer for shape coordinates
     val positions = Vertices(arrayOf(
         -0.2f,1.0f,-0.3f,
@@ -82,11 +82,12 @@ object CharacterAOld : Shape {
         , 4)
 
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         shaders.setColorInput(colors)
         shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(
             projectionMatrix = projectionMatrix,
-            modelMatrix = Matrix.scale(0.5f)))
+            modelMatrix = Matrix.scale(0.5f),
+            worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

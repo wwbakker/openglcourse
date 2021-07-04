@@ -13,7 +13,7 @@ import kotlin.math.sin
 
 class Sphere : Shape {
 
-    private val shaders = VertexAndMultiColorShaders()
+    private val shaders = VertexAndMultiColorShaders
 
     fun spherePositions(latitudeResolution : Int, longitudeResolution : Int, radius : Float) =
         Vertices(values =
@@ -58,7 +58,7 @@ class Sphere : Shape {
 //            .multiply(Matrix.rotate(-15f, x = 1f))
             .multiply(Matrix.rotate(130f, x = 1f))
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         val latitudeResolution = 8
         val longitudeResolution = 8
         val positions = spherePositions(latitudeResolution, longitudeResolution, 2f)
@@ -69,7 +69,8 @@ class Sphere : Shape {
         positions.printByIndex(indices)
 
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix))
+        shaders.setModelViewPerspectiveInput(
+            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix, worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

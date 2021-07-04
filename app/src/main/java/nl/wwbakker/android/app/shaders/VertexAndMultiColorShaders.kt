@@ -5,8 +5,9 @@ import nl.wwbakker.android.app.MyRenderer
 import nl.wwbakker.android.app.ShaderCompileHelper
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Vertices
+import kotlin.properties.Delegates
 
-class VertexAndMultiColorShaders {
+object VertexAndMultiColorShaders {
     private val vertexShaderCode =
         """attribute vec3 aVertexPosition;
            attribute vec4 aVertexColor;
@@ -24,13 +25,14 @@ class VertexAndMultiColorShaders {
                 gl_FragColor = vColor;
            }""".trimIndent()
 
-    private val mProgram: Int =
-        ShaderCompileHelper.createProgram(vertexShaderCode, fragmentShaderCode)
-    private val mPositionHandle: Int
-    private val mMVPMatrixHandle: Int
-    private val mColorHandle: Int
+    private var mProgram by Delegates.notNull<Int>()
+    private var mPositionHandle by Delegates.notNull<Int>()
+    private var mMVPMatrixHandle by Delegates.notNull<Int>()
+    private var mColorHandle by Delegates.notNull<Int>()
 
-    init {
+    fun initiate() {
+        mProgram = ShaderCompileHelper.createProgram(vertexShaderCode, fragmentShaderCode)
+
         GLES32.glUseProgram(mProgram)  // Add program to OpenGL environment
         mPositionHandle = GLES32.glGetAttribLocation(mProgram, "aVertexPosition")
         // Enable a handle to the vertices

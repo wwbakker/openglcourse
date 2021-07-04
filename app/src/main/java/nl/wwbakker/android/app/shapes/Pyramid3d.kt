@@ -8,7 +8,7 @@ import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
 class Pyramid3d : Shape {
 
-    private val shaders = VertexAndMultiColorShaders()
+    private val shaders = VertexAndMultiColorShaders
     // initialize vertex byte buffer for shape coordinates
     val positions = Vertices(arrayOf(
         // front face
@@ -50,9 +50,10 @@ class Pyramid3d : Shape {
         , 4)
 
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix))
+        shaders.setModelViewPerspectiveInput(
+            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, positions.vertexCount)

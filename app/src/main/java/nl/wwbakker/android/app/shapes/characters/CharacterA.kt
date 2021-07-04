@@ -39,8 +39,8 @@ object CharacterA : TwoLineShape() {
         )
     }
 
-    override fun draw(projectionMatrix: Matrix) {
-        super.draw(projectionMatrix)
-        ADash.draw(projectionMatrix)
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+        super.draw(projectionMatrix, worldMatrix)
+        ADash.draw(projectionMatrix, worldMatrix)
     }
 }

@@ -7,7 +7,7 @@ import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
 abstract class TwoLineShape : Shape {
 
-    private val shaders = VertexAndMultiColorShaders()
+    private val shaders = VertexAndMultiColorShaders
 
     open fun shouldNormalize() : Boolean { return false }
 
@@ -16,7 +16,7 @@ abstract class TwoLineShape : Shape {
     abstract fun rightLine() : List<Position2D>
 
     open fun modelMatrix() : Matrix {
-        return Matrix.simpleModelMatrix
+        return Matrix.identity()
     }
 
     fun normalizedBothLines() : List<Position2D> {
@@ -29,8 +29,8 @@ abstract class TwoLineShape : Shape {
         .toFloatArray()
 
 
-    val frontPlane = Vertices(plane(-0.2f), 3)
-    val backPlane = Vertices(plane(0.2f), 3)
+    val frontPlane = Vertices(plane(0.2f), 3)
+    val backPlane = Vertices(plane(-0.2f), 3)
     val positions = frontPlane + backPlane
 
 
@@ -40,14 +40,15 @@ abstract class TwoLineShape : Shape {
     val indices = sPlaneFrontIndices + sPlaneBackIndices + connectingIndices
 
     val colors = Vertices(/**/
-        (0 until frontPlane.vertexCount).map { listOf(1f,1f,0f,1f) }.flatten().toFloatArray() +
-                (0 until backPlane.vertexCount).map { listOf(0f,0f,1f,1f) }.flatten().toFloatArray()
+        (0 until frontPlane.vertexCount).map { listOf(1f,1f,1f,1f) }.flatten().toFloatArray() +
+                (0 until backPlane.vertexCount).map { listOf(0.6f,0.6f,0.6f,1f) }.flatten().toFloatArray()
         , 4)
 
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix()))
+        shaders.setModelViewPerspectiveInput(
+            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix(), worldMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

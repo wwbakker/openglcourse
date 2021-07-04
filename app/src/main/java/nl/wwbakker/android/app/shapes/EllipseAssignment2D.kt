@@ -32,9 +32,10 @@ class EllipseAssignment2D : Shape {
     }
 
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         vertexAndSingleColorShaders.setColorInput(1.0f, 0.0f, 0.0f, 1f)
-        vertexAndSingleColorShaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix))
+        vertexAndSingleColorShaders.setModelViewPerspectiveInput(
+            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
         vertexAndSingleColorShaders.setPositionInput(vertices)
 
         // Draw the triangle

@@ -10,7 +10,7 @@ import kotlin.math.sin
 
 class HalfCone : Shape {
 
-    private val shaders = VertexAndMultiColorShaders()
+    private val shaders = VertexAndMultiColorShaders
 
     private fun circlePositions(resolution : Int, radius : Float, z : Float) : Vertices {
         val thetaStep : Float = ((2 * PI) / resolution).toFloat()
@@ -38,13 +38,14 @@ class HalfCone : Shape {
             .multiply(Matrix.rotate(30f, y = 1f))
             .multiply(Matrix.rotate(30f, x = 1f))
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
 
 
         positions.printByIndex(indices)
 
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix))
+        shaders.setModelViewPerspectiveInput(
+            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix, worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

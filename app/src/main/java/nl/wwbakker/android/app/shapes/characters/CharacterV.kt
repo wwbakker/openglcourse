@@ -7,7 +7,7 @@ import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
 object CharacterV : Shape {
 
-    private val shaders = VertexAndMultiColorShaders()
+    private val shaders = VertexAndMultiColorShaders
 
     val vPlane2d = listOf(
         Position2D(-2f, 2f),
@@ -44,9 +44,13 @@ object CharacterV : Shape {
             .multiply(Matrix.rotate(-30f, y = 1f))
             .multiply(Matrix.translate(z = -1f))
 
-    override fun draw(projectionMatrix: Matrix) {
+    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix))
+        shaders.setModelViewPerspectiveInput(
+            Matrix.simpleModelViewProjectionMatrix(
+                projectionMatrix,
+                modelMatrix,
+                worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
