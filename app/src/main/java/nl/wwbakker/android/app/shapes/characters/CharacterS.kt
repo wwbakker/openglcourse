@@ -41,4 +41,8 @@ object CharacterS : TwoLineShape() {
     override fun shouldNormalize(): Boolean {
         return true
     }
+
+    override fun shouldCenter(): Boolean {
+        return true
+    }
 }

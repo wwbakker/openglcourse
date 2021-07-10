@@ -1,8 +1,6 @@
 package nl.wwbakker.android.app.scenes
 
-import nl.wwbakker.android.app.shapes.Shape
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.shapes.ShapeWithWidth
 import nl.wwbakker.android.app.shapes.characters.*
 import kotlin.random.Random
 

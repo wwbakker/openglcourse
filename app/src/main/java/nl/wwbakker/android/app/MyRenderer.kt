@@ -4,14 +4,18 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.scenes.OwnLogoScene
+import nl.wwbakker.android.app.scenes.PentagonFlyScene
 import nl.wwbakker.android.app.scenes.TextScene
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
+import nl.wwbakker.android.app.shapes.PentagonPrism
+import nl.wwbakker.android.app.shapes.Pyramid3d
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
 class MyRenderer : GLSurfaceView.Renderer {
-    private val shape = TextScene("IMPERIAL")
+
     lateinit var projectionMatrix : Matrix
     var tick = 0L
 
@@ -35,7 +39,8 @@ class MyRenderer : GLSurfaceView.Renderer {
         GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
         GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
 
-        shape.draw(projectionMatrix, tick)
+        OwnLogoScene.draw(projectionMatrix, tick)
+
     }
 
     companion object {

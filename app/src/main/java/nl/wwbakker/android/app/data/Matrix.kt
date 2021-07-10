@@ -63,5 +63,9 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
                 .multiply(modelMatrix)
                 .multiply(worldMatrix)
 
+        fun multiply(vararg m : Matrix) : Matrix {
+            return m.fold(identity()){ acc, matrix -> acc.multiply(matrix) }
+        }
+
     }
 }
