@@ -39,13 +39,21 @@ class TextScene(private val text : String) {
     fun worldRotation(tick: Long) : Matrix {
         if (tick % 360L == 0L) {
             axis = randomAxis()
-            println(axis)
         }
         return Matrix.rotate((tick % 360).toFloat(), axis.first, axis.second, axis.third)
     }
 
     fun draw(projectionMatrix: Matrix, tick : Long) {
         drawString(text, projectionMatrix, worldRotation(tick))
+    }
+
+    fun draw(projectionMatrix: Matrix, rotationAngleX: Float, rotationAngleZ : Float) {
+        drawString(text, projectionMatrix,
+            Matrix.multiply(
+                Matrix.rotate(rotationAngleX, x = 1f),
+                Matrix.rotate(rotationAngleZ, y = 1f),
+            )
+        )
     }
 
     private fun drawString(s : String, projectionMatrix: Matrix, worldMatrix: Matrix) {
@@ -65,8 +73,6 @@ class TextScene(private val text : String) {
                     .multiply(Matrix.translate(z = -5f))
                     .multiply(worldMatrix)
                     .multiply(Matrix.translate(x = currentX + (shapeWidth / 2f)))
-
-
             )
             currentX + shapeWidth + kerning
         }
