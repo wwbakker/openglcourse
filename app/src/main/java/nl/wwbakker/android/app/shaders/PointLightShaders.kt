@@ -3,18 +3,20 @@ package nl.wwbakker.android.app.shaders
 import android.opengl.GLES32
 import nl.wwbakker.android.app.ShaderCompileHelper
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertex
+import nl.wwbakker.android.app.data.Vertex3
 import nl.wwbakker.android.app.data.Vertices
-
+import nl.wwbakker.android.app.shaders.Qualifier.*
+import kotlin.properties.Delegates
 
 object PointLightShaders {
-    private val aVertexPosition = ShaderVariable(Qualifier.Attribute, "vec3", "aVertexPosition")
-    private val aVertexColor = ShaderVariable(Qualifier.Attribute, "vec4", "aVertexColor")
-    private val uMvpMatrix = ShaderVariable(Qualifier.Uniform, "mat4", "uMVPMatrix")
-    private val vColor = ShaderVariable(Qualifier.Varying, "vec4", "vColor")
-    private val uPointLightIntensity = ShaderVariable(Qualifier.Uniform, "float", "uPointLightIntensity")
-    private val uPointLightLocation = ShaderVariable(Qualifier.Uniform, "vec3", "uPointLightLocation")
-    private val vPointLightWeighting = ShaderVariable(Qualifier.Varying, "float", "vPointLightWeighting")
+    private var programHandle by Delegates.notNull<Int>()
+    private val aVertexPosition = ShaderVariable(Attribute, "vec3", "aVertexPosition")
+    private val aVertexColor = ShaderVariable(Attribute, "vec4", "aVertexColor")
+    private val uMvpMatrix = ShaderVariable(Uniform, "mat4", "uMVPMatrix")
+    private val vColor = ShaderVariable(Varying, "vec4", "vColor")
+    private val uPointLightIntensity = ShaderVariable(Uniform, "float", "uPointLightIntensity")
+    private val uPointLightLocation = ShaderVariable(Uniform, "vec3", "uPointLightLocation")
+    private val vPointLightWeighting = ShaderVariable(Varying, "float", "vPointLightWeighting")
     private val variables = listOf(
         aVertexPosition,
         aVertexColor,
@@ -42,10 +44,14 @@ object PointLightShaders {
            }""".trimIndent()
 
     fun initiate() {
-        val mProgram = ShaderCompileHelper.createProgram(vertexShaderCode, fragmentShaderCode)
+        programHandle = ShaderCompileHelper.createProgram(vertexShaderCode, fragmentShaderCode)
 
-        GLES32.glUseProgram(mProgram)  // Add program to OpenGL environment
-        variables.forEach{it.initiate(mProgram)}
+        use()  // Add program to OpenGL environment
+        variables.forEach{it.initiate(programHandle)}
+    }
+
+    fun use() {
+        GLES32.glUseProgram(programHandle)
     }
 
     fun setColorInput(vertices: Vertices) {
@@ -60,7 +66,7 @@ object PointLightShaders {
         aVertexPosition.setValue(vertices)
     }
 
-    fun setPointLightPosition(position: Vertex) {
+    fun setPointLightPosition(position: Vertex3) {
         uPointLightLocation.setValue(position)
     }
 

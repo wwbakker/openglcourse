@@ -1,18 +1,16 @@
 package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.data.Indices
-import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertices
-import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
+import nl.wwbakker.android.app.data.*
+import nl.wwbakker.android.app.shaders.DirectionalLightShaders
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
-object Sphere : Shape {
+object SphereLighted : Shape {
 
-    private val shaders = VertexAndMultiColorShaders
+    private val shaders = DirectionalLightShaders
 
     fun spherePositions(latitudeResolution : Int, longitudeResolution : Int, radius : Float) =
         Vertices(values =
@@ -42,35 +40,29 @@ object Sphere : Shape {
             }.flatten().toIntArray()
         )
 
-    fun sphereColors(latitudeResolution : Int, longitudeResolution : Int) =
-        Vertices(values =
-        (0 until latitudeResolution).flatMap { latitude ->
-            val colorBase = -0.5f
-            val colorInc = 1f / (longitudeResolution)
-            (0 until longitudeResolution).map { longitude ->
-                listOf(1f, abs(colorBase + (longitude * colorInc)), 1f, 1f)
-            }
-        }.flatten().toFloatArray(), valuesPerVertex = 4)
+
 
 
     override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
         val latitudeResolution = 8
         val longitudeResolution = 8
         val positions = spherePositions(latitudeResolution, longitudeResolution, 1f)
-        val colors = sphereColors(latitudeResolution, longitudeResolution)
 
-        val indices = sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(60, 0)
-
-//        positions.printByIndex(indices)
+        val indices = sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(16, 0)
 
         shaders.use()
         shaders.setPositionInput(positions)
-        shaders.setColorInput(colors)
+        shaders.setColorInput(positions.singleColor(1f,0f,0f))
+        shaders.setNormalInput(positions)
+        shaders.setDiffuseColor(Vertex4(1f,1f,1f,1f))
+        shaders.setDiffuseLightLocationInput(Vertex3(3f,3f,2f))
+        shaders.setAttenuation(Vertex3(1f, 0.35f, 0.44f))
         shaders.setModelViewPerspectiveInput(
             Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
 
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
+
     }
 
 

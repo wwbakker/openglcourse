@@ -47,6 +47,10 @@ object VertexAndMultiColorShaders {
         MyRenderer.checkGlError("glGetUniformLocation")
     }
 
+    fun use() {
+        GLES32.glUseProgram(mProgram)
+    }
+
     fun setColorInput(vertices: Vertices) {
         //set the attribute of the vertex to point to the vertex buffer
         GLES32.glVertexAttribPointer(

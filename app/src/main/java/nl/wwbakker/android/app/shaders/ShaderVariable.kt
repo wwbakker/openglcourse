@@ -3,7 +3,8 @@ package nl.wwbakker.android.app.shaders
 import android.opengl.GLES32
 import nl.wwbakker.android.app.MyRenderer
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertex
+import nl.wwbakker.android.app.data.Vertex3
+import nl.wwbakker.android.app.data.Vertex4
 import nl.wwbakker.android.app.data.Vertices
 import kotlin.properties.Delegates
 
@@ -16,6 +17,9 @@ enum class Qualifier(val value : String) {
 
 data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val name : String) {
     val definition = "${qualifier.value} $dataType $name;"
+    init {
+        assert(qualifier.value.first() == name.first()) { "prefix of $name is expected to be the first letter of $qualifier" }
+    }
 
     private var handle by Delegates.notNull<Int>()
     fun initiate(programHandle : Int) {
@@ -50,10 +54,16 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         MyRenderer.checkGlError("glUniformMatrix4fv")
     }
 
-    fun setValue(position: Vertex) {
+    fun setValue(position: Vertex3) {
         assert(dataType == "vec3")
         GLES32.glUniform3fv(handle, 1, position.floatArray, 0)
         MyRenderer.checkGlError("glUniform3fv")
+    }
+
+    fun setValue(position: Vertex4) {
+        assert(dataType == "vec4")
+        GLES32.glUniform4fv(handle, 1, position.floatArray, 0)
+        MyRenderer.checkGlError("glUniform4fv")
     }
 
     fun setValue(value: Float) {

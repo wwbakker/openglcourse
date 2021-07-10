@@ -44,16 +44,15 @@ class TextScene(private val text : String) {
     }
 
     fun draw(projectionMatrix: Matrix, tick : Long) {
-        drawString(text, projectionMatrix, worldRotation(tick))
+        draw(projectionMatrix,
+            Matrix.multiply(
+                Matrix.translate(z = -5f),
+                worldRotation(tick))
+            )
     }
 
-    fun draw(projectionMatrix: Matrix, rotationAngleX: Float, rotationAngleZ : Float) {
-        drawString(text, projectionMatrix,
-            Matrix.multiply(
-                Matrix.rotate(rotationAngleX, x = 1f),
-                Matrix.rotate(rotationAngleZ, y = 1f),
-            )
-        )
+    fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+        drawString(text, projectionMatrix, worldMatrix)
     }
 
     private fun drawString(s : String, projectionMatrix: Matrix, worldMatrix: Matrix) {
@@ -70,7 +69,6 @@ class TextScene(private val text : String) {
                 projectionMatrix,
                 worldMatrix =
                 Matrix.scale(0.3f)
-                    .multiply(Matrix.translate(z = -5f))
                     .multiply(worldMatrix)
                     .multiply(Matrix.translate(x = currentX + (shapeWidth / 2f)))
             )

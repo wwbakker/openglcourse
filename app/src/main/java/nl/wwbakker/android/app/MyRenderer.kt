@@ -4,9 +4,9 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.shaders.PointLightShaders
-import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
-import nl.wwbakker.android.app.shapes.PentagonPrismLighted
+import nl.wwbakker.android.app.scenes.*
+import nl.wwbakker.android.app.shaders.*
+import nl.wwbakker.android.app.shapes.*
 import nl.wwbakker.android.app.usercontrol.TouchControl
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -20,6 +20,7 @@ class MyRenderer(private val touchControl: TouchControl) : GLSurfaceView.Rendere
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         VertexAndMultiColorShaders.initiate()
         PointLightShaders.initiate()
+        DirectionalLightShaders.initiate()
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
     }
@@ -38,9 +39,15 @@ class MyRenderer(private val touchControl: TouchControl) : GLSurfaceView.Rendere
         GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
         GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
 
+        val defaultWorldMatrix = Matrix.multiply(
+            Matrix.translate(z = -3f),
+            touchControl.rotationMatrix
+        )
+
 //        OwnLogoScene.draw(projectionMatrix, tick)
-//        ImperialUserControlScene.draw(projectionMatrix, touchControl.angleX, touchControl.angleY)
-        PentagonPrismLighted.draw(projectionMatrix, Matrix.translate(z = -3f))
+//        ImperialUserControlScene.draw(projectionMatrix, defaultWorldMatrix)
+//        PentagonPrismLighted.draw(projectionMatrix, Matrix.translate(z = -3f))
+        SphereLighted.draw(projectionMatrix, defaultWorldMatrix)
     }
 
     companion object {

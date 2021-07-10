@@ -91,6 +91,13 @@ class Vertices(val values : FloatArray, val valuesPerVertex : Int) {
         }.toFloatArray(), valuesPerVertex = 4)
     }
 
+    fun singleColor(r : Float, g : Float, b : Float) : Vertices {
+        return Vertices(
+            (0 until vertexCount).flatMap { i ->
+                listOf(r,g,b,1f)
+            }.toFloatArray(), valuesPerVertex = 4)
+    }
+
     fun lineIndices() : Indices =
         Indices((0 until vertexCount)
             .flatMap { listOf(it, it) }

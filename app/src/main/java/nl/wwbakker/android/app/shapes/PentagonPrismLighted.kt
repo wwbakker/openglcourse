@@ -3,7 +3,7 @@ package nl.wwbakker.android.app.shapes
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.Indices
 import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertex
+import nl.wwbakker.android.app.data.Vertex3
 import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.PointLightShaders
 
@@ -104,7 +104,7 @@ object PentagonPrismLighted : Shape {
         shaders.setModelViewPerspectiveInput(
             Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
-        shaders.setPointLightPosition(Vertex(8f, 8f, 0f))
+        shaders.setPointLightPosition(Vertex3(8f, 8f, 0f))
         shaders.setPointLightIntensity(125f)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
