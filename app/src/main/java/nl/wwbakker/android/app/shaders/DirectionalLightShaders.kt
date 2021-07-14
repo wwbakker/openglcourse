@@ -21,6 +21,8 @@ object DirectionalLightShaders {
     private val vDiffuseColor = ShaderVariable(Varying, "vec4", "vDiffuseColor")
     private val vDiffuseLightWeighting = ShaderVariable(Varying, "float", "vDiffuseLightWeighting")
     private val uAttenuation = ShaderVariable(Uniform, "vec3", "uAttenuation")
+    private val uAmbientColor = ShaderVariable(Uniform, "vec4", "uAmbientColor")
+    private val vAmbientColor = ShaderVariable(Varying, "vec4", "vAmbientColor")
     private val variables = listOf(
         aVertexPosition,
         aVertexColor,
@@ -32,6 +34,8 @@ object DirectionalLightShaders {
         vDiffuseColor,
         vDiffuseLightWeighting,
         uAttenuation,
+        uAmbientColor,
+        vAmbientColor,
     )
 
     private val vertexShaderCode =
@@ -47,13 +51,14 @@ object DirectionalLightShaders {
                     + uAttenuation.z * diffuseLightDistance * diffuseLightDistance);
               vDiffuseLightWeighting = attenuation * max(dot(transformedNormal,diffuseLightDirection),0.0);
               vColor=aVertexColor;
+              vAmbientColor=uAmbientColor;
            }""".trimIndent()
     private val fragmentShaderCode =
         """precision mediump float;
            ${variables.fragmentShaderDefinitions()}
            void main() {
                 vec4 diffuseColor = vDiffuseLightWeighting * vDiffuseColor;
-                gl_FragColor = vColor+diffuseColor;
+                gl_FragColor = vColor*vAmbientColor+diffuseColor;
            }""".trimIndent()
 
 
@@ -95,6 +100,10 @@ object DirectionalLightShaders {
 
     fun setAttenuation(attenuation: Vertex3) {
         uAttenuation.setValue(attenuation)
+    }
+
+    fun setAmbientColor(color: Vertex4) {
+        uAmbientColor.setValue(color)
     }
 
 }

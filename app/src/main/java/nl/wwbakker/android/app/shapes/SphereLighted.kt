@@ -52,10 +52,11 @@ object SphereLighted : Shape {
 
         shaders.use()
         shaders.setPositionInput(positions)
-        shaders.setColorInput(positions.singleColor(0.3f,0f,0f))
+        shaders.setColorInput(positions.singleColor(1f,0f,0f))
         shaders.setNormalInput(positions)
         shaders.setDiffuseColor(Vertex4(1f,1f,1f,1f))
         shaders.setDiffuseLightLocationInput(Vertex3(3f,2f,2f))
+        shaders.setAmbientColor(Vertex4(0.3f,0.3f,0.3f, 1f))
         shaders.setAttenuation(Vertex3(1f, 0.35f, 0.44f))
         shaders.setModelViewPerspectiveInput(
             Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
