@@ -46,7 +46,7 @@ class MyRenderer(private val touchControl: TouchControl) : GLSurfaceView.Rendere
 
 //        OwnLogoScene.draw(projectionMatrix, tick)
 //        ImperialUserControlScene.draw(projectionMatrix, defaultWorldMatrix)
-//        PentagonPrismLighted.draw(projectionMatrix, Matrix.translate(z = -3f))
+//        PentagonPrismLighted.draw(projectionMatrix, defaultWorldMatrix)
         SphereLighted.draw(projectionMatrix, defaultWorldMatrix)
     }
 

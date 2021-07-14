@@ -52,7 +52,7 @@ object SphereLighted : Shape {
 
         shaders.use()
         shaders.setPositionInput(positions)
-        shaders.setColorInput(positions.singleColor(1f,0f,0f))
+        shaders.setColorInput(positions.singleColor(0.8f,0f,0f))
         shaders.setNormalInput(positions)
         shaders.setDiffuseColor(Vertex4(1f,1f,1f,1f))
         shaders.setDiffuseLightLocationInput(Vertex3(3f,3f,2f))

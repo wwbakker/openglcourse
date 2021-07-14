@@ -100,12 +100,13 @@ object PentagonPrismLighted : Shape {
         ).toIntArray())
 
     override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+        shaders.use()
         shaders.setColorInput(colors)
         shaders.setModelViewPerspectiveInput(
             Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
         shaders.setPositionInput(positions)
-        shaders.setPointLightPosition(Vertex3(8f, 8f, 0f))
-        shaders.setPointLightIntensity(125f)
+        shaders.setPointLightPosition(Vertex3(4f, 4f, 0f))
+        shaders.setPointLightIntensity(25f)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
     }

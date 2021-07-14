@@ -51,7 +51,7 @@ object DirectionalLightShaders {
            }""".trimIndent()
     private val fragmentShaderCode =
         """precision mediump float;
-           ${variables.pixelShaderDefinitions()}
+           ${variables.fragmentShaderDefinitions()}
            void main() {
                 vec4 diffuseColor = vDiffuseLightWeighting * vDiffuseColor;
                 gl_FragColor = vColor+diffuseColor;

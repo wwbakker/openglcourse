@@ -38,7 +38,7 @@ object PointLightShaders {
            }""".trimIndent()
     private val fragmentShaderCode =
         """precision mediump float;
-           ${variables.pixelShaderDefinitions()}
+           ${variables.fragmentShaderDefinitions()}
            void main() {
                 gl_FragColor = vec4(vColor.xyz*vPointLightWeighting,1);
            }""".trimIndent()
