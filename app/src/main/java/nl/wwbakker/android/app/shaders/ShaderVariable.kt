@@ -55,6 +55,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
                 handle, vertices.valuesPerVertex,
                 GLES32.GL_FLOAT, false, vertices.vertexStride, vertices.vertexBuffer
             )
+            GLES32.glEnableVertexAttribArray(handle)
             MyRenderer.checkGlError("glVertexAttribPointer")
         }
     }

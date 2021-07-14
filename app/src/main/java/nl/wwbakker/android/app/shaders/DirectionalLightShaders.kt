@@ -43,9 +43,8 @@ object DirectionalLightShaders {
               vDiffuseColor = uDiffuseColor;
               vec3 vertexToLightSource = uDiffuseLightLocation-gl_Position.xyz;
               float diffuseLightDistance = length(vertexToLightSource);
-              float attenuation = 1.0 / ( uAttenuation.x + uAttenuation.y * diffuseLightDistance +
-                        uAttenuation.z * diffuseLightDistance * diffuseLightDistance);
-              float diffuseLightWeighting = 0.0;
+              float attenuation = 1.0 / (uAttenuation.x + uAttenuation.y * diffuseLightDistance 
+                    + uAttenuation.z * diffuseLightDistance * diffuseLightDistance);
               vDiffuseLightWeighting = attenuation * max(dot(transformedNormal,diffuseLightDirection),0.0);
               vColor=aVertexColor;
            }""".trimIndent()
