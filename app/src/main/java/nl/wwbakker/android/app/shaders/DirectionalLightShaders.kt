@@ -40,16 +40,21 @@ object DirectionalLightShaders {
 
     private val vertexShaderCode =
         """${variables.vertexShaderDefinitions()}
-           void main() {
-              gl_Position = uMVPMatrix *vec4(aVertexPosition,1.0);
-              vec3 diffuseLightDirection = normalize(uDiffuseLightLocation-gl_Position.xyz);
-              vec3 transformedNormal = normalize((uMVPMatrix * vec4(aVertexNormal, 0.0)).xyz);
-              vDiffuseColor = uDiffuseColor;
-              vec3 vertexToLightSource = uDiffuseLightLocation-gl_Position.xyz;
-              float diffuseLightDistance = length(vertexToLightSource);
-              float attenuation = 1.0 / (uAttenuation.x + uAttenuation.y * diffuseLightDistance 
+            float diffuseLightWeighting();
+            float diffuseLightWeighting() {
+                vec3 diffuseLightDirection = normalize(uDiffuseLightLocation-gl_Position.xyz);
+                vec3 transformedNormal = normalize((uMVPMatrix * vec4(aVertexNormal, 0.0)).xyz);
+                vec3 vertexToLightSource = uDiffuseLightLocation-gl_Position.xyz;
+                float diffuseLightDistance = length(vertexToLightSource);
+                float attenuation = 1.0 / (uAttenuation.x + uAttenuation.y * diffuseLightDistance 
                     + uAttenuation.z * diffuseLightDistance * diffuseLightDistance);
-              vDiffuseLightWeighting = attenuation * max(dot(transformedNormal,diffuseLightDirection),0.0);
+                return attenuation * max(dot(transformedNormal,diffuseLightDirection),0.0);
+            }
+            
+            void main() {
+              gl_Position = uMVPMatrix *vec4(aVertexPosition,1.0);
+              vDiffuseLightWeighting = diffuseLightWeighting();
+              vDiffuseColor = uDiffuseColor;
               vColor=aVertexColor;
               vAmbientColor=uAmbientColor;
            }""".trimIndent()
