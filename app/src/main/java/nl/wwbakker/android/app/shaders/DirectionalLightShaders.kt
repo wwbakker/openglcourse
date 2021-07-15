@@ -19,10 +19,16 @@ object DirectionalLightShaders {
     private val uDiffuseLightLocation = ShaderVariable(Uniform, "vec3", "uDiffuseLightLocation")
     private val uDiffuseColor = ShaderVariable(Uniform, "vec4", "uDiffuseColor")
     private val vDiffuseColor = ShaderVariable(Varying, "vec4", "vDiffuseColor")
-    private val vDiffuseLightWeighting = ShaderVariable(Varying, "float", "vDiffuseLightWeighting")
+    private val vDiffuseLightWeight = ShaderVariable(Varying, "float", "vDiffuseLightWeight")
     private val uAttenuation = ShaderVariable(Uniform, "vec3", "uAttenuation")
     private val uAmbientColor = ShaderVariable(Uniform, "vec4", "uAmbientColor")
     private val vAmbientColor = ShaderVariable(Varying, "vec4", "vAmbientColor")
+    private val uSpecularColor = ShaderVariable(Uniform, "vec4", "uSpecularColor")
+    private val vSpecularColor = ShaderVariable(Varying, "vec4", "vSpecularColor")
+    private val vSpecularLightWeight = ShaderVariable(Varying, "float", "vSpecularLightWeight")
+    private val uSpecularLightLocation = ShaderVariable(Uniform, "vec3", "uSpecularLightLocation")
+    private val uMaterialShininess = ShaderVariable(Uniform, "float", "uMaterialShininess")
+
     private val variables = listOf(
         aVertexPosition,
         aVertexColor,
@@ -32,16 +38,22 @@ object DirectionalLightShaders {
         uDiffuseLightLocation,
         uDiffuseColor,
         vDiffuseColor,
-        vDiffuseLightWeighting,
+        vDiffuseLightWeight,
         uAttenuation,
         uAmbientColor,
         vAmbientColor,
+        uSpecularColor,
+        vSpecularColor,
+        vSpecularLightWeight,
+        uSpecularLightLocation,
+        uMaterialShininess,
     )
 
     private val vertexShaderCode =
         """${variables.vertexShaderDefinitions()}
-            float diffuseLightWeighting();
-            float diffuseLightWeighting() {
+            float diffuseLightWeight();
+            float specularLightWeight();
+            float diffuseLightWeight() {
                 vec3 diffuseLightDirection = normalize(uDiffuseLightLocation-gl_Position.xyz);
                 vec3 transformedNormal = normalize((uMVPMatrix * vec4(aVertexNormal, 0.0)).xyz);
                 vec3 vertexToLightSource = uDiffuseLightLocation-gl_Position.xyz;
@@ -50,10 +62,23 @@ object DirectionalLightShaders {
                     + uAttenuation.z * diffuseLightDistance * diffuseLightDistance);
                 return attenuation * max(dot(transformedNormal,diffuseLightDirection),0.0);
             }
+            float specularLightWeight() {
+                vec3 viewDirection = normalize(-gl_Position.xyz);
+                vec3 transformedNormal = normalize((uMVPMatrix * vec4(aVertexNormal, 0.0)).xyz);
+                vec3 vertexToLightSource = uSpecularLightLocation-gl_Position.xyz;
+                vec3 specularLightDirection= normalize(vertexToLightSource);
+                float specularLightDistance = length(vertexToLightSource);
+                vec3 reflectionDirection=reflect(-specularLightDirection, transformedNormal);
+                float attenuation = 1.0 / (uAttenuation.x + uAttenuation.y * specularLightDistance 
+                    + uAttenuation.z * specularLightDistance * specularLightDistance);
+                return attenuation*pow(max(dot(reflectionDirection,viewDirection),0.0),uMaterialShininess);
+            }
             
             void main() {
               gl_Position = uMVPMatrix *vec4(aVertexPosition,1.0);
-              vDiffuseLightWeighting = diffuseLightWeighting();
+              vDiffuseLightWeight = diffuseLightWeight();
+              vSpecularLightWeight = specularLightWeight();
+              vSpecularColor = uSpecularColor;
               vDiffuseColor = uDiffuseColor;
               vColor=aVertexColor;
               vAmbientColor=uAmbientColor;
@@ -62,8 +87,9 @@ object DirectionalLightShaders {
         """precision mediump float;
            ${variables.fragmentShaderDefinitions()}
            void main() {
-                vec4 diffuseColor = vDiffuseLightWeighting * vDiffuseColor;
-                gl_FragColor = vColor*vAmbientColor+diffuseColor;
+                vec4 diffuseColor = vDiffuseLightWeight * vDiffuseColor;
+                vec4 specularColor = vSpecularLightWeight * vSpecularColor;
+                gl_FragColor = vColor*vAmbientColor+specularColor+diffuseColor;
            }""".trimIndent()
 
 
@@ -109,6 +135,18 @@ object DirectionalLightShaders {
 
     fun setAmbientColor(color: Vertex4) {
         uAmbientColor.setValue(color)
+    }
+
+    fun setSpecularLightLocationInput(position: Vertex3) {
+        uSpecularLightLocation.setValue(position)
+    }
+
+    fun setSpecularColor(color: Vertex4) {
+        uSpecularColor.setValue(color)
+    }
+
+    fun setMaterialShininess(shininess: Float) {
+        uMaterialShininess.setValue(shininess)
     }
 
 }

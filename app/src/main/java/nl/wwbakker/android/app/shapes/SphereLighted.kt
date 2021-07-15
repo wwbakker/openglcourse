@@ -44,19 +44,24 @@ object SphereLighted : Shape {
 
 
     override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
-        val latitudeResolution = 8
-        val longitudeResolution = 8
+        val latitudeResolution = 32
+        val longitudeResolution = 32
         val positions = spherePositions(latitudeResolution, longitudeResolution, 1f)
 
         val indices = sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(16, 0)
+        val lightColor = Vertex4(1f,1f,1f,1f)
+        val lightLocation = Vertex3(3f,2f,2f)
 
         shaders.use()
         shaders.setPositionInput(positions)
         shaders.setColorInput(positions.singleColor(1f,0f,0f))
         shaders.setNormalInput(positions)
-        shaders.setDiffuseColor(Vertex4(1f,1f,1f,1f))
-        shaders.setDiffuseLightLocationInput(Vertex3(3f,2f,2f))
+        shaders.setDiffuseColor(lightColor)
+        shaders.setDiffuseLightLocationInput(lightLocation)
         shaders.setAmbientColor(Vertex4(0.3f,0.3f,0.3f, 1f))
+        shaders.setSpecularColor(lightColor)
+        shaders.setSpecularLightLocationInput(lightLocation)
+        shaders.setMaterialShininess(10f)
         shaders.setAttenuation(Vertex3(1f, 0.35f, 0.44f))
         shaders.setModelViewPerspectiveInput(
             Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
