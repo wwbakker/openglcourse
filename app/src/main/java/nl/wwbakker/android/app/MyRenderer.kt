@@ -21,6 +21,7 @@ class MyRenderer(private val touchControl: TouchControl) : GLSurfaceView.Rendere
         VertexAndMultiColorShaders.initiate()
         PointLightShaders.initiate()
         DirectionalLightShaders.initiate()
+        PhongLightShaders.initiate()
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
     }

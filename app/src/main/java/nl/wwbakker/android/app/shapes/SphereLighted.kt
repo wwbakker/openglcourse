@@ -2,15 +2,14 @@ package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.*
-import nl.wwbakker.android.app.shaders.DirectionalLightShaders
+import nl.wwbakker.android.app.shaders.PhongLightShaders
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 object SphereLighted : Shape {
 
-    private val shaders = DirectionalLightShaders
+    private val shaders = PhongLightShaders
 
     fun spherePositions(latitudeResolution : Int, longitudeResolution : Int, radius : Float) =
         Vertices(values =
@@ -57,10 +56,9 @@ object SphereLighted : Shape {
         shaders.setColorInput(positions.singleColor(1f,0f,0f))
         shaders.setNormalInput(positions)
         shaders.setDiffuseColor(lightColor)
-        shaders.setDiffuseLightLocationInput(lightLocation)
+        shaders.setLightLocationInput(lightLocation)
         shaders.setAmbientColor(Vertex4(0.3f,0.3f,0.3f, 1f))
         shaders.setSpecularColor(lightColor)
-        shaders.setSpecularLightLocationInput(lightLocation)
         shaders.setMaterialShininess(10f)
         shaders.setAttenuation(Vertex3(1f, 0.35f, 0.44f))
         shaders.setModelViewPerspectiveInput(
