@@ -152,7 +152,7 @@ object TexturedLightedShaders {
     }
 
     fun setActiveTexture() {
-//        GLES32.glActiveTexture(0)
+        GLES32.glActiveTexture(GLES32.GL_TEXTURE1)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureHandle)
         uTextureSampler.setIndex(0)
     }
