@@ -14,19 +14,16 @@ object PhongLightShaders {
     private val aVertexPosition = ShaderVariable(Attribute, "vec3", "aVertexPosition")
     private val aVertexColor = ShaderVariable(Attribute, "vec4", "aVertexColor")
     private val aVertexNormal = ShaderVariable(Attribute, "vec3", "aVertexNormal")
-    private val uMvpMatrix = ShaderVariable(Uniform, "mat4", "uMVPMatrix")
+    private val uMvpMatrix = ShaderVariable(UniformVertexShader, "mat4", "uMVPMatrix")
     private val vColor = ShaderVariable(Varying, "vec4", "vColor")
-    private val uLightLocation = ShaderVariable(Uniform, "vec3", "uLightLocation")
-    private val uDiffuseColor = ShaderVariable(Uniform, "vec4", "uDiffuseColor")
-    private val vDiffuseColor = ShaderVariable(Varying, "vec4", "vDiffuseColor")
+    private val uLightLocation = ShaderVariable(UniformVertexShader, "vec3", "uLightLocation")
+    private val uDiffuseColor = ShaderVariable(UniformFragmentShader, "vec4", "uDiffuseColor")
     private val vDiffuseLightWeight = ShaderVariable(Varying, "float", "vDiffuseLightWeight")
-    private val uAttenuation = ShaderVariable(Uniform, "vec3", "uAttenuation")
-    private val uAmbientColor = ShaderVariable(Uniform, "vec4", "uAmbientColor")
-    private val vAmbientColor = ShaderVariable(Varying, "vec4", "vAmbientColor")
-    private val uSpecularColor = ShaderVariable(Uniform, "vec4", "uSpecularColor")
-    private val vSpecularColor = ShaderVariable(Varying, "vec4", "vSpecularColor")
+    private val uAttenuation = ShaderVariable(UniformVertexShader, "vec3", "uAttenuation")
+    private val uAmbientColor = ShaderVariable(UniformFragmentShader, "vec4", "uAmbientColor")
+    private val uSpecularColor = ShaderVariable(UniformFragmentShader, "vec4", "uSpecularColor")
     private val vSpecularLightWeight = ShaderVariable(Varying, "float", "vSpecularLightWeight")
-    private val uMaterialShininess = ShaderVariable(Uniform, "float", "uMaterialShininess")
+    private val uMaterialShininess = ShaderVariable(UniformVertexShader, "float", "uMaterialShininess")
 
     private val variables = listOf(
         aVertexPosition,
@@ -36,13 +33,10 @@ object PhongLightShaders {
         vColor,
         uLightLocation,
         uDiffuseColor,
-        vDiffuseColor,
         vDiffuseLightWeight,
         uAttenuation,
         uAmbientColor,
-        vAmbientColor,
         uSpecularColor,
-        vSpecularColor,
         vSpecularLightWeight,
         uMaterialShininess,
     )
@@ -69,20 +63,16 @@ object PhongLightShaders {
             void main() {
               gl_Position = uMVPMatrix *vec4(aVertexPosition,1.0);
               calculateDiffuseAndSpecularLightWeights();
-              vSpecularColor = uSpecularColor;
-              vDiffuseColor = uDiffuseColor;
               vColor=aVertexColor;
-              vAmbientColor=uAmbientColor;
            }""".trimIndent()
     private val fragmentShaderCode =
         """precision mediump float;
            ${variables.fragmentShaderDefinitions()}
            void main() {
-                vec4 diffuseColor = vDiffuseLightWeight * vDiffuseColor;
-                vec4 specularColor = vSpecularLightWeight * vSpecularColor;
-                gl_FragColor = vColor*vAmbientColor+specularColor+diffuseColor;
+                vec4 diffuseColor = vDiffuseLightWeight * uDiffuseColor;
+                vec4 specularColor = vSpecularLightWeight * uSpecularColor;
+                gl_FragColor = vColor*uAmbientColor+specularColor+diffuseColor;
            }""".trimIndent()
-
 
 
     fun initiate() {

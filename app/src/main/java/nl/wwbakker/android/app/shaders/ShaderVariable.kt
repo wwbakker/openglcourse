@@ -3,14 +3,12 @@ package nl.wwbakker.android.app.shaders
 import android.opengl.GLES32
 import android.util.Log
 import nl.wwbakker.android.app.MyRenderer
-import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertex3
-import nl.wwbakker.android.app.data.Vertex4
-import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.data.*
 import kotlin.properties.Delegates
 
 enum class Qualifier(val value : String) {
-    Uniform("uniform"),
+    UniformFragmentShader("uniform"),
+    UniformVertexShader("uniform"),
     Varying("varying"),
     Attribute("attribute"),
     ;
@@ -25,7 +23,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
     private var handle by Delegates.notNull<Int>()
     fun initiate(programHandle : Int) {
         when(qualifier) {
-            Qualifier.Uniform -> {
+            Qualifier.UniformVertexShader, Qualifier.UniformFragmentShader -> {
                 handle = GLES32.glGetUniformLocation(programHandle, name)
                 MyRenderer.checkGlError("glGetUniformLocation")
             }
@@ -95,9 +93,9 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
 
 
 fun List<ShaderVariable>.vertexShaderDefinitions() : String {
-    return joinToString(separator = "\n", postfix = "\n") { it.definition }
+    return filter { it.qualifier != Qualifier.UniformFragmentShader }.joinToString(separator = "\n", postfix = "\n") { it.definition }
 }
 
 fun List<ShaderVariable>.fragmentShaderDefinitions() : String {
-    return filter { it.qualifier == Qualifier.Varying }.joinToString(separator = "\n", postfix = "\n") { it.definition }
+    return filter { it.qualifier == Qualifier.Varying || it.qualifier == Qualifier.UniformFragmentShader }.joinToString(separator = "\n", postfix = "\n") { it.definition }
 }

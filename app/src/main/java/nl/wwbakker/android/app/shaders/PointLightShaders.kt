@@ -12,10 +12,10 @@ object PointLightShaders {
     private var programHandle by Delegates.notNull<Int>()
     private val aVertexPosition = ShaderVariable(Attribute, "vec3", "aVertexPosition")
     private val aVertexColor = ShaderVariable(Attribute, "vec4", "aVertexColor")
-    private val uMvpMatrix = ShaderVariable(Uniform, "mat4", "uMVPMatrix")
+    private val uMvpMatrix = ShaderVariable(UniformVertexShader, "mat4", "uMVPMatrix")
     private val vColor = ShaderVariable(Varying, "vec4", "vColor")
-    private val uPointLightIntensity = ShaderVariable(Uniform, "float", "uPointLightIntensity")
-    private val uPointLightLocation = ShaderVariable(Uniform, "vec3", "uPointLightLocation")
+    private val uPointLightIntensity = ShaderVariable(UniformVertexShader, "float", "uPointLightIntensity")
+    private val uPointLightLocation = ShaderVariable(UniformVertexShader, "vec3", "uPointLightLocation")
     private val vPointLightWeighting = ShaderVariable(Varying, "float", "vPointLightWeighting")
     private val variables = listOf(
         aVertexPosition,
