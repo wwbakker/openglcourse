@@ -46,7 +46,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
     }
 
     fun setValue(vertices: Vertices) {
-        assert(dataType == "vec4" || dataType == "vec3")
+        assert(dataType == "vec4" || dataType == "vec3" || dataType == "vec2")
         if (checkVariableExists()) {
             //set the attribute of the vertex to Diffuse to the vertex buffer
             GLES32.glVertexAttribPointer(
@@ -87,6 +87,14 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         if (checkVariableExists()) {
             GLES32.glUniform1f(handle, value)
             MyRenderer.checkGlError("glUniform1f")
+        }
+    }
+
+    fun setIndex(index : Int) {
+        assert(dataType == "sampler2D")
+        if (checkVariableExists()) {
+            GLES32.glUniform1i(handle, index)
+            MyRenderer.checkGlError("glUniform1i")
         }
     }
 }

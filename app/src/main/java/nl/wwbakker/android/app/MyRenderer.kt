@@ -1,5 +1,6 @@
 package nl.wwbakker.android.app
 
+import android.content.Context
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
@@ -12,7 +13,7 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
-class MyRenderer(private val touchControl: TouchControl) : GLSurfaceView.Renderer {
+class MyRenderer(private val touchControl: TouchControl, private val context: Context) : GLSurfaceView.Renderer {
 
     lateinit var projectionMatrix : Matrix
     var tick = 0L
@@ -22,8 +23,10 @@ class MyRenderer(private val touchControl: TouchControl) : GLSurfaceView.Rendere
         PointLightShaders.initiate()
         DirectionalLightShaders.initiate()
         PhongLightShaders.initiate()
+        TexturedLightedShaders.initiate()
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
+        WorldLighted.load(context = context)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
@@ -48,7 +51,8 @@ class MyRenderer(private val touchControl: TouchControl) : GLSurfaceView.Rendere
 //        OwnLogoScene.draw(projectionMatrix, tick)
 //        ImperialUserControlScene.draw(projectionMatrix, defaultWorldMatrix)
 //        PentagonPrismLighted.draw(projectionMatrix, defaultWorldMatrix)
-        SphereLighted.draw(projectionMatrix, defaultWorldMatrix)
+//        SphereLighted.draw(projectionMatrix, defaultWorldMatrix)
+        WorldLighted.draw(projectionMatrix, defaultWorldMatrix)
     }
 
     companion object {

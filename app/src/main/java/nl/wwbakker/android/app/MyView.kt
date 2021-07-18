@@ -13,7 +13,7 @@ class MyView(context: Context?) : GLSurfaceView(context) {
     private val touchControl = TouchControl(
         Resources.getSystem().displayMetrics.widthPixels,
         Resources.getSystem().displayMetrics.heightPixels)
-    private val mRenderer = MyRenderer(touchControl)
+    private val mRenderer = MyRenderer(touchControl, context!!)
     init {
         setEGLContextClientVersion(2) // Create an OpenGL ES 2.0 context.
         setRenderer(mRenderer)
