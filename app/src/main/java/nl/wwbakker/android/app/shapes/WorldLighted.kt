@@ -13,35 +13,6 @@ object WorldLighted : Shape {
 
     private val shaders = TexturedLightedShaders
 
-    fun spherePositions(latitudeResolution : Int, longitudeResolution : Int, radius : Float) =
-        Vertices(values =
-        (0 until latitudeResolution).flatMap { latitude ->
-            val theta = latitude * PI / (latitudeResolution - 1)
-            val sinTheta = sin(theta)
-            val cosTheta = cos(theta)
-            (0 until longitudeResolution).map { longitude ->
-                val phi = longitude * 2 * PI / longitudeResolution
-                val sinPhi = sin(phi)
-                val cosPhi = cos(phi)
-                val x = cosPhi * sinTheta
-                val y = cosTheta
-                val z = sinPhi * sinTheta
-                listOf((radius * x).toFloat(), (radius * y).toFloat(), (radius * z).toFloat())
-            }
-        }.flatten().toFloatArray(), valuesPerVertex = 3)
-
-    fun sphereIndices(latitudeResolution : Int, longitudeResolution : Int) =
-        Indices(values =
-            (0 until latitudeResolution).flatMap { latitude ->
-                (0 until longitudeResolution - 1).map { longitude ->
-                    val p0 = ((longitude * latitudeResolution) + latitude) % (longitudeResolution * latitudeResolution)
-                    val p1 = p0 + latitudeResolution
-                    listOf(p0, p1, p0 + 1, p1, (p1 + 1) % (latitudeResolution * longitudeResolution), p0 + 1)
-                }
-            }.flatten().toIntArray()
-        )
-
-
     fun sphereTextureCoords(latitudeResolution: Int, longitudeResolution: Int) =
         Vertices(
             (0 until latitudeResolution).flatMap { latitude ->
@@ -57,14 +28,16 @@ object WorldLighted : Shape {
         shaders.loadTextureFromResourcesOnce(context, R.drawable.world_smaller)
     }
 
+    val latitudeResolution = 32
+    val longitudeResolution = 32
+    val positions = Sphere.spherePositions(latitudeResolution, longitudeResolution, 2f)
+    val normals = positions.generateNormals()
+    val textureCoords = sphereTextureCoords(latitudeResolution, longitudeResolution)
+    val indices = Sphere.sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(16, 0)
+    val lightColor = Vertex4(1f,1f,1f,1f)
+    val lightLocation = Vertex3(0f,2f,0f)
+
     override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
-        val latitudeResolution = 128
-        val longitudeResolution = 128
-        val positions = spherePositions(latitudeResolution, longitudeResolution, 2f)
-        val textureCoords = sphereTextureCoords(latitudeResolution, longitudeResolution)
-        val indices = sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(16, 0)
-        val lightColor = Vertex4(1f,1f,1f,1f)
-        val lightLocation = Vertex3(0f,2f,0f)
 
         shaders.use()
         shaders.setPositionInput(positions)

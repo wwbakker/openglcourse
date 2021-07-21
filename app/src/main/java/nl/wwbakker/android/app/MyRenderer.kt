@@ -17,7 +17,7 @@ class MyRenderer(private val touchControl: TouchControl, private val context: Co
 
     lateinit var projectionMatrix : Matrix
     var tick = 0L
-    val shape = PyramidTextured
+    val shape = WorldLighted
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         VertexAndMultiColorShaders.initiate()
@@ -25,6 +25,9 @@ class MyRenderer(private val touchControl: TouchControl, private val context: Co
         DirectionalLightShaders.initiate()
         PhongLightShaders.initiate()
         TexturedLightedShaders.initiate()
+        GLES32.glCullFace(GLES32.GL_BACK)
+        GLES32.glEnable(GLES32.GL_CULL_FACE)
+
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
         shape.load(context)

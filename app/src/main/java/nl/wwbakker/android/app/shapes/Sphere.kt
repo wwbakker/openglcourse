@@ -37,7 +37,7 @@ object Sphere : Shape {
                 (0 until longitudeResolution - 1).map { longitude ->
                     val p0 = ((longitude * latitudeResolution) + latitude) % (longitudeResolution * latitudeResolution)
                     val p1 = p0 + latitudeResolution
-                    listOf(p0, p1, p0 + 1, p1, (p1 + 1) % (latitudeResolution * longitudeResolution), p0 + 1)
+                    listOf(p0, p0 + 1, p1, p1, p0 + 1, (p1 + 1) % (latitudeResolution * longitudeResolution))
                 }
             }.flatten().toIntArray()
         )

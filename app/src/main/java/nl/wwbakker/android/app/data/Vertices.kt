@@ -121,16 +121,17 @@ class Vertices(val values : FloatArray, val valuesPerVertex : Int) {
 
     fun toVertex3List() : List<Vertex3> {
         assert(valuesPerVertex == 3)
-        return (0 until vertexCount step 3)
-            .map { i ->  Vertex3(values[i], values[i + 1], values[i + 2]) }
+        return (0 until vertexCount)
+            .map { i ->  Vertex3(values[i * 3], values[i * 3 + 1], values[i * 3 + 2]) }
     }
 
     fun generateNormals() : Vertices {
         val vertex3s = toVertex3List()
-        return (0 until vertex3s.size / 3 step 3).map { i ->
-            val v1 = vertex3s[i] - vertex3s[i + 1]
-            val v2 = vertex3s[i] - vertex3s[i + 2]
-            v1.cross(v2).normalize()
+        return (0 until vertex3s.size / 3).flatMap { i ->
+            val v1 = vertex3s[i * 3] - vertex3s[i * 3 + 1]
+            val v2 = vertex3s[i * 3] - vertex3s[i * 3 + 2]
+            val normal = v1.cross(v2).normalize()
+            listOf(normal, normal, normal)
         }.toVertices()
     }
 

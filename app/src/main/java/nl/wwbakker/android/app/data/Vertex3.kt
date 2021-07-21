@@ -17,7 +17,10 @@ data class Vertex3(val x : Float, val y : Float, val z : Float) {
     fun normalize() : Vertex3 {
         val magnitude =
             sqrt((x * x) + (y * y) + (z * z))
-        return Vertex3(x / magnitude, y / magnitude, z / magnitude)
+        return if (magnitude < 0.01f)
+            Vertex3(0f, 0f, 0f)
+        else
+            Vertex3(x / magnitude, y / magnitude, z / magnitude)
     }
 
     fun dot(other: Vertex3) : Float =
