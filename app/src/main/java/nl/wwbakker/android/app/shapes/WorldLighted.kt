@@ -53,7 +53,7 @@ object WorldLighted : Shape {
         )
 
 
-    fun load(context: Context) {
+    override fun load(context: Context) {
         shaders.loadTextureFromResourcesOnce(context, R.drawable.world_smaller)
     }
 

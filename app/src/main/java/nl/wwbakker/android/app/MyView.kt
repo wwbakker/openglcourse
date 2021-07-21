@@ -23,7 +23,6 @@ class MyView(context: Context?) : GLSurfaceView(context) {
 
     val timer = Timer()
     val task = timerTask {
-        this@MyView.invalidate()
         this@MyView.requestRender()
         mRenderer.tick += 1L
     }

@@ -118,4 +118,20 @@ class Vertices(val values : FloatArray, val valuesPerVertex : Int) {
     private fun getValueSafe(i : Int) : String {
         return if (i < values.size) values[i].toString() else "OOB!"
     }
+
+    fun toVertex3List() : List<Vertex3> {
+        assert(valuesPerVertex == 3)
+        return (0 until vertexCount step 3)
+            .map { i ->  Vertex3(values[i], values[i + 1], values[i + 2]) }
+    }
+
+    fun generateNormals() : Vertices {
+        val vertex3s = toVertex3List()
+        return (0 until vertex3s.size / 3 step 3).map { i ->
+            val v1 = vertex3s[i] - vertex3s[i + 1]
+            val v2 = vertex3s[i] - vertex3s[i + 2]
+            v1.cross(v2).normalize()
+        }.toVertices()
+    }
+
 }

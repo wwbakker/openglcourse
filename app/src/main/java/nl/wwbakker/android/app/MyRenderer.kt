@@ -17,6 +17,7 @@ class MyRenderer(private val touchControl: TouchControl, private val context: Co
 
     lateinit var projectionMatrix : Matrix
     var tick = 0L
+    val shape = PyramidTextured
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         VertexAndMultiColorShaders.initiate()
@@ -26,7 +27,7 @@ class MyRenderer(private val touchControl: TouchControl, private val context: Co
         TexturedLightedShaders.initiate()
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        WorldLighted.load(context = context)
+        shape.load(context)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
@@ -52,7 +53,8 @@ class MyRenderer(private val touchControl: TouchControl, private val context: Co
 //        ImperialUserControlScene.draw(projectionMatrix, defaultWorldMatrix)
 //        PentagonPrismLighted.draw(projectionMatrix, defaultWorldMatrix)
 //        SphereLighted.draw(projectionMatrix, defaultWorldMatrix)
-        WorldLighted.draw(projectionMatrix, defaultWorldMatrix)
+//        WorldLighted.draw(projectionMatrix, defaultWorldMatrix)
+        shape.draw(projectionMatrix, defaultWorldMatrix)
     }
 
     companion object {
