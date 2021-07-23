@@ -2,8 +2,8 @@ package nl.wwbakker.android.app
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
+import nl.wwbakker.android.app.usercontrol.SensorControl
 
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
 
-        glView = MyView(this)
+        glView = MyView(this, lifecycle)
         setContentView(glView)
         mControlsView = window.decorView
 
@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         mControlsView.systemUiVisibility = uiOptions
 
+
     }
+
 
 }

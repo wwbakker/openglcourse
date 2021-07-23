@@ -4,18 +4,23 @@ import android.content.Context
 import android.content.res.Resources
 import android.opengl.GLSurfaceView
 import android.view.MotionEvent
+import androidx.lifecycle.Lifecycle
+import nl.wwbakker.android.app.usercontrol.SensorControl
 import nl.wwbakker.android.app.usercontrol.TouchControl
 import java.util.*
 import kotlin.concurrent.timerTask
 
 
-class MyView(context: Context) : GLSurfaceView(context) {
+class MyView(context: Context, lifecycle : Lifecycle) : GLSurfaceView(context) {
     private val touchControl = TouchControl(
         Resources.getSystem().displayMetrics.widthPixels,
         Resources.getSystem().displayMetrics.heightPixels,
         context)
-    private val mRenderer = MyRenderer(touchControl, context)
+
+    private val sensorControl = SensorControl(context)
+    private val mRenderer = MyRenderer(touchControl, sensorControl, context)
     init {
+        lifecycle.addObserver(sensorControl)
         setEGLContextClientVersion(2) // Create an OpenGL ES 2.0 context.
         setRenderer(mRenderer)
         // Render the view only when there is a change in the drawing data

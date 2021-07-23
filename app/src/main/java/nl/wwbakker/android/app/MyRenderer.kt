@@ -8,12 +8,15 @@ import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.scenes.*
 import nl.wwbakker.android.app.shaders.*
 import nl.wwbakker.android.app.shapes.*
+import nl.wwbakker.android.app.usercontrol.SensorControl
 import nl.wwbakker.android.app.usercontrol.TouchControl
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
-class MyRenderer(private val touchControl: TouchControl, private val context: Context) : GLSurfaceView.Renderer {
+class MyRenderer(private val touchControl: TouchControl,
+                 private val sensorControl: SensorControl,
+                 private val context: Context) : GLSurfaceView.Renderer {
 
     lateinit var projectionMatrix : Matrix
     var tick = 0L
@@ -49,7 +52,8 @@ class MyRenderer(private val touchControl: TouchControl, private val context: Co
 
         val defaultWorldMatrix = Matrix.multiply(
             Matrix.translate(z = -3f),
-            touchControl.scaleAndRotationMatrix
+            sensorControl.rotationMatrix,
+            touchControl.scaleAndRotationMatrix,
         )
 
 //        OwnLogoScene.draw(projectionMatrix, tick)
