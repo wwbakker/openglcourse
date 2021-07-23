@@ -9,11 +9,12 @@ import java.util.*
 import kotlin.concurrent.timerTask
 
 
-class MyView(context: Context?) : GLSurfaceView(context) {
+class MyView(context: Context) : GLSurfaceView(context) {
     private val touchControl = TouchControl(
         Resources.getSystem().displayMetrics.widthPixels,
-        Resources.getSystem().displayMetrics.heightPixels)
-    private val mRenderer = MyRenderer(touchControl, context!!)
+        Resources.getSystem().displayMetrics.heightPixels,
+        context)
+    private val mRenderer = MyRenderer(touchControl, context)
     init {
         setEGLContextClientVersion(2) // Create an OpenGL ES 2.0 context.
         setRenderer(mRenderer)

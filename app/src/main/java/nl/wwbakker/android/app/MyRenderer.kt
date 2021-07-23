@@ -49,7 +49,7 @@ class MyRenderer(private val touchControl: TouchControl, private val context: Co
 
         val defaultWorldMatrix = Matrix.multiply(
             Matrix.translate(z = -3f),
-            touchControl.rotationMatrix
+            touchControl.scaleAndRotationMatrix
         )
 
 //        OwnLogoScene.draw(projectionMatrix, tick)
