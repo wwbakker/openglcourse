@@ -1,7 +1,7 @@
 package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.MyRenderer
+import nl.wwbakker.android.app.rendering.MyRenderer
 import nl.wwbakker.android.app.data.Matrix
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

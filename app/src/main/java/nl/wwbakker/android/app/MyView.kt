@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.opengl.GLSurfaceView
 import android.view.MotionEvent
 import androidx.lifecycle.Lifecycle
+import nl.wwbakker.android.app.rendering.MyRenderer
 import nl.wwbakker.android.app.usercontrol.SensorControl
 import nl.wwbakker.android.app.usercontrol.TouchControl
 import java.util.*

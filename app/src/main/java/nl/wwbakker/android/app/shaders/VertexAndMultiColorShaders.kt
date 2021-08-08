@@ -1,7 +1,7 @@
 package nl.wwbakker.android.app.shaders
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.MyRenderer
+import nl.wwbakker.android.app.rendering.MyRenderer
 import nl.wwbakker.android.app.ShaderCompileHelper
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Vertices

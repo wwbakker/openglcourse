@@ -32,16 +32,24 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
                 ) //head is down (set to (0,1,0) to look from the top)
             }
 
-//        val simpleModelMatrix =
-//            translate(z = -2f)
-//                .multiply(rotate(30f, x = 1f))
-//                .multiply(rotate(30f, y = 1f))
 
         fun simpleProjectionMatrix(width: Int, height : Int) : Matrix {
             return identity().set {
                 val ratio = width.toFloat() / height
                 val left = -ratio
                 android.opengl.Matrix.frustumM(it, 0, left, ratio, -1.0f, 1.0f, 1.0f, 8.0f)
+            }
+        }
+
+        fun orthographicProjectionMatrix(width: Int, height: Int) : Matrix {
+            return identity().set {
+                if (width > height) {
+                    val ratio = width / height.toFloat()
+                    GlMatrix.orthoM(it, 0, -ratio, ratio, -1f, 1f, -10f, 200f)
+                } else {
+                    val ratio = height / width.toFloat()
+                    GlMatrix.orthoM(it, 0, -1f, 1f, -ratio, ratio, -10f, 200f)
+                }
             }
         }
 
@@ -53,6 +61,9 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
 
         fun scale(xyz : Float = 0f) : Matrix =
             identity().set { GlMatrix.scaleM(it, 0, xyz, xyz, xyz) }
+
+        fun scale(x : Float = 1f, y : Float = 1f, z : Float = 1f) : Matrix =
+            identity().set { GlMatrix.scaleM(it, 0, x, y, z) }
 
 
         fun simpleModelViewProjectionMatrix(projectionMatrix : Matrix,

@@ -2,7 +2,7 @@ package nl.wwbakker.android.app.shaders
 
 import android.opengl.GLES32
 import android.util.Log
-import nl.wwbakker.android.app.MyRenderer
+import nl.wwbakker.android.app.rendering.MyRenderer
 import nl.wwbakker.android.app.data.*
 import kotlin.properties.Delegates
 
