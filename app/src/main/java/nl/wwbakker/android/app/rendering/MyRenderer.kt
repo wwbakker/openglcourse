@@ -34,7 +34,6 @@ class MyRenderer(private val touchControl: TouchControl,
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
         shape.load(context)
-        frameBufferDisplay.init(context)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
@@ -50,8 +49,8 @@ class MyRenderer(private val touchControl: TouchControl,
             // Draw background color
             GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
             GLES32.glClearDepthf(1.0f) //set up the depth buffer
-            GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
-            GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
+//            GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
+//            GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
 
             val defaultWorldMatrix = Matrix.multiply(
                 Matrix.translate(z = -3f),

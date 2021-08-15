@@ -27,7 +27,7 @@ abstract class FrameBufferDisplay {
         orthographicProjectionMatrix = Matrix.orthographicProjectionMatrix(width, height)
     }
 
-    val position = Vertices(
+    private val position = Vertices(
         arrayOf(
             -1f, -1f, 1f,
             1f, -1f, 1f,
@@ -35,8 +35,8 @@ abstract class FrameBufferDisplay {
             -1f, 1f, 1f,
         ).toFloatArray(), 3
     )
-    val indices = Indices(arrayOf(0,1,2,0,2,3).toIntArray())
-    val textureCoordinates = Vertices(
+    private val indices = Indices(arrayOf(0,1,2,0,2,3).toIntArray())
+    private val textureCoordinates = Vertices(
         arrayOf(
             0f,0f,
             1f,0f,
@@ -47,21 +47,15 @@ abstract class FrameBufferDisplay {
 
     abstract fun drawUnto()
 
-    fun init(context: Context) {
-        shaders.loadTextureFromResourcesOnce(context, R.drawable.world_smaller)
-    }
-
     fun draw() {
-//        renderAndFrameBuffer.bind()
-//        GLES32.glViewport(0, 0, width, height)
-//        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
-//        drawUnto()
-//        renderAndFrameBuffer.unbind()
+        renderAndFrameBuffer.bind()
+        GLES32.glViewport(0, 0, width, height)
+        drawUnto()
+        renderAndFrameBuffer.unbind()
 
         GLES32.glViewport(0, 0, width, height)
         val mvpMatrix = Matrix.simpleModelViewProjectionMatrix(
             projectionMatrix = orthographicProjectionMatrix,
-//            modelMatrix = Matrix.rotate(degrees = 180f, z = 1f)
             modelMatrix = Matrix.scale(y = height.toFloat() / width)
         )
 
@@ -70,7 +64,6 @@ abstract class FrameBufferDisplay {
         shaders.setTextureCoordinateInput(textureCoordinates)
         shaders.setModelViewPerspectiveInput(mvpMatrix)
         shaders.setTexture(renderAndFrameBuffer.textureId)
-        shaders.setActiveTexture()
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
     }
 }

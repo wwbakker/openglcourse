@@ -2,7 +2,6 @@ package nl.wwbakker.android.app.rendering
 
 import android.opengl.GLES32
 import android.util.Log
-import kotlin.properties.Delegates
 
 class RenderAndFrameBuffer {
     private val frameBufferIds = IntArray(1)
@@ -13,12 +12,13 @@ class RenderAndFrameBuffer {
     val textureId : Int
         get() = textureIds[0]
 
+
     fun init(width: Int, height: Int) {
         if (initialized) {
             clean()
         }
         generateFrameBuffer()
-        generateTexture(GLES32.GL_TEXTURE2, GLES32.GL_RGBA, GLES32.GL_UNSIGNED_BYTE, width, height)
+        generateTexture(FRAMEBUFFER_TEXTURE_INDEX, GLES32.GL_RGBA, GLES32.GL_UNSIGNED_BYTE, width, height)
         generateRenderBuffer(width, height)
         bindBuffersAndTexture()
 
@@ -99,4 +99,7 @@ class RenderAndFrameBuffer {
         GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, 0)
     }
 
+    companion object {
+        const val FRAMEBUFFER_TEXTURE_INDEX = GLES32.GL_TEXTURE1
+    }
 }

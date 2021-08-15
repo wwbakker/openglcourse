@@ -7,6 +7,7 @@ import android.opengl.GLUtils
 import nl.wwbakker.android.app.ShaderCompileHelper
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.rendering.RenderAndFrameBuffer.Companion.FRAMEBUFFER_TEXTURE_INDEX
 import nl.wwbakker.android.app.shaders.Qualifier.*
 import kotlin.properties.Delegates
 
@@ -89,11 +90,11 @@ object FrameBufferShaders {
     fun setActiveTexture() {
         GLES32.glActiveTexture(GLES32.GL_TEXTURE1)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureHandle)
-        uTextureSampler.setIndex(0)
+        uTextureSampler.setIndex(1)
     }
 
     fun setTexture(frameBufferTextureId: Int) {
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE1)
+        GLES32.glActiveTexture(FRAMEBUFFER_TEXTURE_INDEX)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, frameBufferTextureId)
         uTextureSampler.setIndex(1)
     }
