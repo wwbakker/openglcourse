@@ -6,9 +6,10 @@ import nl.wwbakker.android.app.rendering.RenderAndFrameBuffer
 import nl.wwbakker.android.app.shaders.FrameBufferShaders
 import kotlin.properties.Delegates
 
-abstract class FrameBufferDisplay {
+abstract class StereoDisplay {
 
-    private val renderAndFrameBuffer: RenderAndFrameBuffer = RenderAndFrameBuffer()
+    private val renderAndFrameBufferLeft: RenderAndFrameBuffer = RenderAndFrameBuffer()
+    private val renderAndFrameBufferRight: RenderAndFrameBuffer = RenderAndFrameBuffer()
     private var orthographicProjectionMatrix = Matrix.identity()
 
     var width by Delegates.notNull<Int>()
@@ -16,13 +17,17 @@ abstract class FrameBufferDisplay {
     var height by Delegates.notNull<Int>()
         private set
 
+    private val halfWidth: Int
+        get() = width / 2
+
     val shaders = FrameBufferShaders
 
     fun onSurfaceChanged(width: Int, height: Int) {
         this.width = width
         this.height = height
-        renderAndFrameBuffer.init(width, height)
-        orthographicProjectionMatrix = Matrix.orthographicProjectionMatrix(width, height)
+        renderAndFrameBufferLeft.init(halfWidth, height)
+        renderAndFrameBufferRight.init(halfWidth, height)
+        orthographicProjectionMatrix = Matrix.orthographicProjectionMatrix(halfWidth, height)
     }
 
     private val position = Vertices(
@@ -42,16 +47,19 @@ abstract class FrameBufferDisplay {
             0f,1f,
         ).toFloatArray(), 2)
 
-
-    abstract fun drawUnto()
+    abstract fun drawUnto(side: Side)
 
     fun draw() {
-        renderAndFrameBuffer.bind()
-        GLES32.glViewport(0, 0, width, height)
-        drawUnto()
-        renderAndFrameBuffer.unbind()
+        renderAndFrameBufferLeft.bind()
+        GLES32.glViewport(0, 0, halfWidth, height)
+        drawUnto(Side.LEFT)
+        renderAndFrameBufferLeft.unbind()
 
-        GLES32.glViewport(0, 0, width, height)
+        renderAndFrameBufferRight.bind()
+        GLES32.glViewport(0, 0, halfWidth, height)
+        drawUnto(Side.RIGHT)
+        renderAndFrameBufferRight.unbind()
+
         val mvpMatrix = Matrix.simpleModelViewProjectionMatrix(
             projectionMatrix = orthographicProjectionMatrix,
             modelMatrix = Matrix.scale(y = height.toFloat() / width)
@@ -61,7 +69,13 @@ abstract class FrameBufferDisplay {
         shaders.setPositionInput(position)
         shaders.setTextureCoordinateInput(textureCoordinates)
         shaders.setModelViewPerspectiveInput(mvpMatrix)
-        shaders.setTexture(renderAndFrameBuffer.textureId, renderAndFrameBuffer.textureIndex)
+
+        GLES32.glViewport(0, 0, halfWidth, height)
+        shaders.setTexture(renderAndFrameBufferLeft.textureId, renderAndFrameBufferLeft.textureIndex)
+        GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
+
+        GLES32.glViewport(halfWidth, 0, halfWidth, height)
+        shaders.setTexture(renderAndFrameBufferRight.textureId, renderAndFrameBufferRight.textureIndex)
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
     }
 }

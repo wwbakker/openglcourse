@@ -5,6 +5,7 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.Side
 import nl.wwbakker.android.app.shaders.*
 import nl.wwbakker.android.app.shapes.*
 import nl.wwbakker.android.app.usercontrol.SensorControl
@@ -44,8 +45,8 @@ class MyRenderer(private val touchControl: TouchControl,
         projectionMatrix = Matrix.simpleProjectionMatrix(width, height)
     }
 
-    private val frameBufferDisplay = object : FrameBufferDisplay() {
-        override fun drawUnto() {
+    private val frameBufferDisplay = object : StereoDisplay() {
+        override fun drawUnto(side: Side) {
             // Draw background color
             GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
             GLES32.glClearDepthf(1.0f) //set up the depth buffer
