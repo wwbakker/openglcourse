@@ -1,8 +1,6 @@
 package nl.wwbakker.android.app.shapes
 
-import android.content.Context
 import android.opengl.GLES32
-import nl.wwbakker.android.app.R
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.rendering.RenderAndFrameBuffer
 import nl.wwbakker.android.app.shaders.FrameBufferShaders
@@ -63,7 +61,7 @@ abstract class FrameBufferDisplay {
         shaders.setPositionInput(position)
         shaders.setTextureCoordinateInput(textureCoordinates)
         shaders.setModelViewPerspectiveInput(mvpMatrix)
-        shaders.setTexture(renderAndFrameBuffer.textureId)
+        shaders.setTexture(renderAndFrameBuffer.textureId, renderAndFrameBuffer.textureIndex)
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
     }
 }

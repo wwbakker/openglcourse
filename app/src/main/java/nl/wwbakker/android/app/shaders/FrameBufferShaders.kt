@@ -1,13 +1,10 @@
 package nl.wwbakker.android.app.shaders
 
-import android.content.Context
-import android.graphics.BitmapFactory
 import android.opengl.GLES32
-import android.opengl.GLUtils
 import nl.wwbakker.android.app.ShaderCompileHelper
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.TextureIndex
 import nl.wwbakker.android.app.data.Vertices
-import nl.wwbakker.android.app.rendering.RenderAndFrameBuffer.Companion.FRAMEBUFFER_TEXTURE_INDEX
 import nl.wwbakker.android.app.shaders.Qualifier.*
 import kotlin.properties.Delegates
 
@@ -66,36 +63,9 @@ object FrameBufferShaders {
         uMvpMatrix.setValue(mvpMatrix)
     }
 
-    private var textureHandle by Delegates.notNull<Int>()
-
-    fun loadTextureFromResourcesOnce(context : Context, textureResource : Int) {
-        val newTextureHandle = arrayOf(0).toIntArray()
-        GLES32.glGenTextures(1, newTextureHandle, 0)
-        assert(newTextureHandle[0] != 0) {"Cannot create texture handle"}
-        val options = BitmapFactory.Options()
-        options.inScaled = false
-        val bitmap = BitmapFactory.decodeResource(context.resources, textureResource)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, newTextureHandle[0])
-        GLUtils.texImage2D(GLES32.GL_TEXTURE_2D, 0, bitmap, 0)
-        bitmap.recycle()
-        textureHandle = newTextureHandle[0]
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_NEAREST)
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_NEAREST)
-
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_CLAMP_TO_EDGE)
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_CLAMP_TO_EDGE)
-
-    }
-
-    fun setActiveTexture() {
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE1)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureHandle)
-        uTextureSampler.setIndex(1)
-    }
-
-    fun setTexture(frameBufferTextureId: Int) {
-        GLES32.glActiveTexture(FRAMEBUFFER_TEXTURE_INDEX)
+    fun setTexture(frameBufferTextureId: Int, frameBufferTextureIndex: TextureIndex) {
+        GLES32.glActiveTexture(frameBufferTextureIndex.openGl)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, frameBufferTextureId)
-        uTextureSampler.setIndex(1)
+        uTextureSampler.setIndex(frameBufferTextureIndex.shader)
     }
 }

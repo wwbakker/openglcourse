@@ -5,10 +5,7 @@ import android.graphics.BitmapFactory
 import android.opengl.GLES32
 import android.opengl.GLUtils
 import nl.wwbakker.android.app.ShaderCompileHelper
-import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertex3
-import nl.wwbakker.android.app.data.Vertex4
-import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.Qualifier.*
 import kotlin.properties.Delegates
 
@@ -31,6 +28,7 @@ object TexturedLightedShaders {
     private val vTextureCoordinate = ShaderVariable(Varying, "vec2", "vTextureCoordinate")
     private val uTextureSampler = ShaderVariable(UniformFragmentShader, "sampler2D", "uTextureSampler")
     private var textureHandle by Delegates.notNull<Int>()
+    private val textureIndex = TextureIndex.generate()
 
     private val variables = listOf(
         aVertexPosition,
@@ -152,9 +150,9 @@ object TexturedLightedShaders {
     }
 
     fun setActiveTexture() {
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
+        GLES32.glActiveTexture(textureIndex.openGl)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureHandle)
-        uTextureSampler.setIndex(0)
+        uTextureSampler.setIndex(textureIndex.shader)
     }
 
 

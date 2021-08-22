@@ -2,6 +2,7 @@ package nl.wwbakker.android.app.rendering
 
 import android.opengl.GLES32
 import android.util.Log
+import nl.wwbakker.android.app.data.TextureIndex
 
 class RenderAndFrameBuffer {
     private val frameBufferIds = IntArray(1)
@@ -9,6 +10,7 @@ class RenderAndFrameBuffer {
     private val renderBufferIds = IntArray(1)
     private var initialized = false
 
+    val textureIndex = TextureIndex.generate()
     val textureId : Int
         get() = textureIds[0]
 
@@ -18,7 +20,7 @@ class RenderAndFrameBuffer {
             clean()
         }
         generateFrameBuffer()
-        generateTexture(FRAMEBUFFER_TEXTURE_INDEX, GLES32.GL_RGBA, GLES32.GL_UNSIGNED_BYTE, width, height)
+        generateTexture(GLES32.GL_RGBA, GLES32.GL_UNSIGNED_BYTE, width, height)
         generateRenderBuffer(width, height)
         bindBuffersAndTexture()
 
@@ -54,12 +56,10 @@ class RenderAndFrameBuffer {
         GLES32.glBindFramebuffer(GLES32.GL_DRAW_FRAMEBUFFER, frameBufferIds[0])
     }
 
-    private fun generateTexture(textureIndex : Int, pixelFormat: Int, type : Int, width: Int, height: Int) {
-        assert(textureIndex >= GLES32.GL_TEXTURE0 && textureIndex <= GLES32.GL_TEXTURE31)
-
+    private fun generateTexture(pixelFormat: Int, type : Int, width: Int, height: Int) {
         GLES32.glGenTextures(1, textureIds, 0)
 
-        GLES32.glActiveTexture(textureIndex)
+        GLES32.glActiveTexture(textureIndex.openGl)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureIds[0])
 
         GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_NEAREST)
@@ -97,9 +97,5 @@ class RenderAndFrameBuffer {
     private fun unbindBuffersAndTexture() {
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, 0)
         GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, 0)
-    }
-
-    companion object {
-        const val FRAMEBUFFER_TEXTURE_INDEX = GLES32.GL_TEXTURE1
     }
 }
