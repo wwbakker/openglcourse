@@ -11,7 +11,7 @@ object SphereLighted : Shape {
 
     private val shaders = PhongLightShaders
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         val latitudeResolution = 32
         val longitudeResolution = 32
         val positions = Sphere.spherePositions(latitudeResolution, longitudeResolution, 1f)
@@ -29,8 +29,7 @@ object SphereLighted : Shape {
         shaders.setSpecularColor(lightColor)
         shaders.setMaterialShininess(10f)
         shaders.setAttenuation(Vertex3(1f, 0.35f, 0.44f))
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
+        shaders.setModelViewPerspectiveInput(modelViewProjection.matrix)
 
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

@@ -37,14 +37,11 @@ class HalfCone : Shape {
             .multiply(Matrix.rotate(30f, y = 1f))
             .multiply(Matrix.rotate(30f, x = 1f))
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
-
-
+    override fun draw(modelViewProjection: ModelViewProjection) {
         positions.printByIndex(indices)
 
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix, worldMatrix = worldMatrix))
+        shaders.setModelViewPerspectiveInput(modelViewProjection.copy(modelMatrix = modelMatrix).matrix)
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

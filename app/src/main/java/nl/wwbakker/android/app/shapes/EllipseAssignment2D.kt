@@ -2,6 +2,7 @@ package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndSingleColorShaders
 import kotlin.math.PI
@@ -31,10 +32,9 @@ class EllipseAssignment2D : Shape {
     }
 
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         vertexAndSingleColorShaders.setColorInput(1.0f, 0.0f, 0.0f, 1f)
-        vertexAndSingleColorShaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
+        vertexAndSingleColorShaders.setModelViewPerspectiveInput(modelViewProjection.matrix)
         vertexAndSingleColorShaders.setPositionInput(vertices)
 
         // Draw the triangle

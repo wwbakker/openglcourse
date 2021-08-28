@@ -3,6 +3,7 @@ package nl.wwbakker.android.app.shapes
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.Indices
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 import kotlin.math.PI
@@ -53,7 +54,7 @@ object Sphere : Shape {
         }.flatten().toFloatArray(), valuesPerVertex = 4)
 
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         val latitudeResolution = 8
         val longitudeResolution = 8
         val positions = spherePositions(latitudeResolution, longitudeResolution, 1f)
@@ -66,8 +67,7 @@ object Sphere : Shape {
         shaders.use()
         shaders.setPositionInput(positions)
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
+        shaders.setModelViewPerspectiveInput(modelViewProjection.matrix)
 
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

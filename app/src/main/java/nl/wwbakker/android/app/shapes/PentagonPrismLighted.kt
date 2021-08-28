@@ -1,10 +1,7 @@
 package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.data.Indices
-import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertex3
-import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.PointLightShaders
 
 object PentagonPrismLighted : Shape {
@@ -99,11 +96,10 @@ object PentagonPrismLighted : Shape {
         26,27,28,28,29,26,
         ).toIntArray())
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         shaders.use()
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
+        shaders.setModelViewPerspectiveInput(modelViewProjection.matrix)
         shaders.setPositionInput(positions)
         shaders.setPointLightPosition(Vertex3(4f, 4f, 0f))
         shaders.setPointLightIntensity(25f)

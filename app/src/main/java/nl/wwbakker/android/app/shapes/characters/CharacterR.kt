@@ -1,6 +1,7 @@
 package nl.wwbakker.android.app.shapes.characters
 
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.data.Position2D
 import nl.wwbakker.android.app.shapes.ShapeWithWidth
 
@@ -24,9 +25,9 @@ object CharacterR : ShapeWithWidth {
         }
     }
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
-        CharacterP.draw(projectionMatrix, worldMatrix)
-        RLeg.draw(projectionMatrix, worldMatrix)
+    override fun draw(modelViewProjection: ModelViewProjection) {
+        CharacterP.draw(modelViewProjection)
+        RLeg.draw(modelViewProjection)
     }
 
     override fun width(): Float {

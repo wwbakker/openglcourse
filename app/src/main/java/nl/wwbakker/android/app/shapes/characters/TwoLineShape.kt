@@ -58,10 +58,14 @@ abstract class TwoLineShape : ShapeWithWidth {
         return (xPoints.maxByOrNull { it } ?: 0f) - (xPoints.minByOrNull { it } ?: 0f)
     }
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
+        shaders.use()
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, modelMatrix(), worldMatrix))
+        shaders.setModelViewPerspectiveInput(modelViewProjection.copy(modelMatrix =
+        Matrix.multiply(
+            modelMatrix(),
+            modelViewProjection.modelMatrix,
+        )).matrix)
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

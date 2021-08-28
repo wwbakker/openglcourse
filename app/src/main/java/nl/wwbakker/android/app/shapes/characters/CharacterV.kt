@@ -1,10 +1,7 @@
 package nl.wwbakker.android.app.shapes.characters
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Position2D
-import nl.wwbakker.android.app.data.Vertices
-import nl.wwbakker.android.app.data.normalize
+import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 import nl.wwbakker.android.app.shapes.ShapeWithWidth
 
@@ -51,13 +48,10 @@ object CharacterV : ShapeWithWidth {
         return 1f
     }
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         shaders.setColorInput(colors)
         shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(
-                projectionMatrix,
-                modelMatrix,
-                worldMatrix = worldMatrix))
+            modelViewProjection.copy(modelMatrix = modelMatrix).matrix)
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

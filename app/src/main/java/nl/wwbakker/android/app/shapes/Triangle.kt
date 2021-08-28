@@ -3,6 +3,7 @@ package nl.wwbakker.android.app.shapes
 import android.opengl.GLES32
 import nl.wwbakker.android.app.rendering.MyRenderer
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -59,9 +60,9 @@ class Triangle : Shape {
     }
 
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         // Apply the projection and view transformation
-        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix).values, 0)
+        GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, modelViewProjection.matrix.values, 0)
         MyRenderer.checkGlError("glUniformMatrix4fv")
         //set the attribute of the vertex to point to the vertex buffer
         GLES32.glVertexAttribPointer(

@@ -1,6 +1,7 @@
 package nl.wwbakker.android.app.scenes
 
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.shapes.characters.*
 import kotlin.random.Random
 
@@ -66,11 +67,13 @@ class TextScene(private val text : String) {
         characterShapes.fold(mostLeftX) { currentX, shape ->
             val shapeWidth = shape.width()
             shape.draw(
-                projectionMatrix,
-                worldMatrix =
-                Matrix.scale(0.3f)
-                    .multiply(worldMatrix)
-                    .multiply(Matrix.translate(x = currentX + (shapeWidth / 2f)))
+                ModelViewProjection(
+                    projectionMatrix,
+                    worldMatrix = Matrix.scale(0.3f)
+                        .multiply(worldMatrix)
+                        .multiply(Matrix.translate(x = currentX + (shapeWidth / 2f))
+                        )
+                )
             )
             currentX + shapeWidth + kerning
         }

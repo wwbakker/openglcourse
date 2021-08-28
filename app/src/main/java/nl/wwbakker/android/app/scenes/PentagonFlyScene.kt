@@ -1,6 +1,7 @@
 package nl.wwbakker.android.app.scenes
 
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.shapes.PentagonPrism
 
 object PentagonFlyScene {
@@ -18,13 +19,13 @@ object PentagonFlyScene {
 
 
     fun draw(projectionMatrix: Matrix, tick : Long) {
-        pentagonPrism.draw(
-            projectionMatrix,
-            worldMatrix = Matrix.multiply(
-                Matrix.translate(z = -3f, y = 0f),
-                Matrix.scale(0.3f),
-                rotate(tick),
-                Matrix.translate(y = 6f),
-            ))
+        val mvp = ModelViewProjection(projectionMatrix, worldMatrix = Matrix.multiply(
+            Matrix.translate(z = -3f, y = 0f),
+            Matrix.scale(0.3f),
+            rotate(tick),
+            Matrix.translate(y = 6f),
+        ))
+
+        pentagonPrism.draw(mvp)
     }
 }

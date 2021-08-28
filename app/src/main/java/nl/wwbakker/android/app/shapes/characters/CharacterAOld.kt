@@ -4,6 +4,7 @@ import android.opengl.GLES32
 import nl.wwbakker.android.app.shapes.Shape
 import nl.wwbakker.android.app.data.Indices
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
@@ -82,12 +83,10 @@ object CharacterAOld : Shape {
         , 4)
 
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(Matrix.simpleModelViewProjectionMatrix(
-            projectionMatrix = projectionMatrix,
-            modelMatrix = Matrix.scale(0.5f),
-            worldMatrix = worldMatrix))
+        shaders.setModelViewPerspectiveInput(
+            modelViewProjection.copy(modelMatrix = Matrix.scale(0.5f)).matrix)
         shaders.setPositionInput(positions)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)

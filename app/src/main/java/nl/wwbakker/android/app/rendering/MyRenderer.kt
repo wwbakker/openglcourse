@@ -5,6 +5,8 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.util.Log
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
+import nl.wwbakker.android.app.data.SIMPLE_NEAR_Z
 import nl.wwbakker.android.app.data.Side
 import nl.wwbakker.android.app.shaders.*
 import nl.wwbakker.android.app.shapes.*
@@ -20,6 +22,8 @@ class MyRenderer(private val touchControl: TouchControl,
 
     lateinit var projectionMatrix : Matrix
     var tick = 0L
+//    val shape = nl.wwbakker.android.app.shapes.characters.CharacterM
+//    val shape = PyramidTextured
     val shape = WorldLighted
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
@@ -47,24 +51,40 @@ class MyRenderer(private val touchControl: TouchControl,
 
     private val frameBufferDisplay = object : StereoDisplay() {
         override fun drawUnto(side: Side) {
-            // Draw background color
-            GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
-            GLES32.glClearDepthf(1.0f) //set up the depth buffer
-//            GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
-//            GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
+            val intraOcularDistance = 0.8f
+            val screenZ = -10f
+            val frustrumShift = -(intraOcularDistance / 2) * SIMPLE_NEAR_Z / screenZ
+            val modelTranslationX = intraOcularDistance / 2f
 
+
+            GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+            val stereoProjectionMatrix =
+                Matrix.stereoProjectionMatrix(side, width, height, frustrumShift)
             val defaultWorldMatrix = Matrix.multiply(
-                Matrix.translate(z = -3f),
+                Matrix.translate(z = -2f),
                 sensorControl.rotationMatrix,
                 touchControl.scaleAndRotationMatrix,
             )
+            val stereoViewMatrix = Matrix.stereoViewMatrix(side, intraOcularDistance, screenZ)
+            val modelMatrix =
+                Matrix.translate(x = if (side == Side.LEFT) modelTranslationX else -modelTranslationX)
 
-            shape.draw(projectionMatrix, defaultWorldMatrix)
+            shape.draw(ModelViewProjection(
+                stereoProjectionMatrix,
+                viewMatrix = stereoViewMatrix,
+                worldMatrix = defaultWorldMatrix,
+                modelMatrix = modelMatrix
+            ))
         }
 
     }
 
     override fun onDrawFrame(unused: GL10) {
+        // Draw background color
+        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES32.glClearDepthf(1.0f) //set up the depth buffer
+//        GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
+//        GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
         frameBufferDisplay.draw()
     }
 

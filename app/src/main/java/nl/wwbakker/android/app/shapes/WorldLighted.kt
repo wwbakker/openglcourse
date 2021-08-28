@@ -25,7 +25,7 @@ object WorldLighted : Shape {
 
 
     override fun load(context: Context) {
-        shaders.loadTextureFromResourcesOnce(context, R.drawable.world_smaller)
+        shaders.loadTextureFromResourcesOnce(context, R.drawable.world)
     }
 
     val latitudeResolution = 32
@@ -37,7 +37,7 @@ object WorldLighted : Shape {
     val lightColor = Vertex4(1f,1f,1f,1f)
     val lightLocation = Vertex3(0f,2f,0f)
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
 
         shaders.use()
         shaders.setPositionInput(positions)
@@ -49,8 +49,7 @@ object WorldLighted : Shape {
         shaders.setSpecularColor(lightColor)
         shaders.setMaterialShininess(10f)
         shaders.setAttenuation(Vertex3(1f, 0.35f, 0.44f))
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
+        shaders.setModelViewPerspectiveInput(modelViewProjection.matrix)
 
         shaders.setActiveTexture()
 

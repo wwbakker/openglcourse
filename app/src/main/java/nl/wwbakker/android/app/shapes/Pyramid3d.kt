@@ -2,6 +2,7 @@ package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 
@@ -49,10 +50,9 @@ class Pyramid3d : Shape {
         , 4)
 
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         shaders.setColorInput(colors)
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix = worldMatrix))
+        shaders.setModelViewPerspectiveInput(modelViewProjection.matrix)
         shaders.setPositionInput(positions)
 
         GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, positions.vertexCount)

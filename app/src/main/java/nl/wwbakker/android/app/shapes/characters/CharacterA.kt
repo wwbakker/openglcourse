@@ -1,6 +1,6 @@
 package nl.wwbakker.android.app.shapes.characters
 
-import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.data.Position2D
 
 object CharacterA : TwoLineShape() {
@@ -39,8 +39,8 @@ object CharacterA : TwoLineShape() {
         )
     }
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
-        super.draw(projectionMatrix, worldMatrix)
-        ADash.draw(projectionMatrix, worldMatrix)
+    override fun draw(modelViewProjection: ModelViewProjection) {
+        super.draw(modelViewProjection)
+        ADash.draw(modelViewProjection)
     }
 }

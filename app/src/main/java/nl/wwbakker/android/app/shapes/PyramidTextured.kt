@@ -3,10 +3,7 @@ package nl.wwbakker.android.app.shapes
 import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.R
-import nl.wwbakker.android.app.data.Matrix
-import nl.wwbakker.android.app.data.Vertex3
-import nl.wwbakker.android.app.data.Vertex4
-import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.TexturedLightedShaders
 
 object PyramidTextured : Shape {
@@ -58,19 +55,14 @@ object PyramidTextured : Shape {
     }
 
 
-    override fun draw(projectionMatrix: Matrix, worldMatrix: Matrix) {
+    override fun draw(modelViewProjection: ModelViewProjection) {
         val lightColor = Vertex4(1f,1f,1f,1f)
         val lightLocation = Vertex3(0f,2f,0f)
 
+        val mvpMatrix = modelViewProjection.matrix
+
         shaders.use()
-        shaders.setModelViewPerspectiveInput(
-            Matrix.simpleModelViewProjectionMatrix(projectionMatrix, worldMatrix =
-            Matrix.multiply(
-                Matrix.translate(z = -3f),
-                Matrix.rotate(degrees = 30f , x = 1f),
-                Matrix.rotate(degrees = 30f , y = 1f),
-            )
-            ))
+        shaders.setModelViewPerspectiveInput(mvpMatrix)
         shaders.setPositionInput(positions)
         shaders.setTextureCoordinateInput(textureCoordinates)
         shaders.setNormalInput(normals)

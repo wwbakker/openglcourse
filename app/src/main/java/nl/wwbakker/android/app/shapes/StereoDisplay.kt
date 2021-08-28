@@ -17,7 +17,7 @@ abstract class StereoDisplay {
     var height by Delegates.notNull<Int>()
         private set
 
-    private val halfWidth: Int
+    val halfWidth: Int
         get() = width / 2
 
     val shaders = FrameBufferShaders

@@ -2,6 +2,9 @@ package nl.wwbakker.android.app.data
 
 import android.opengl.Matrix as GlMatrix
 
+const val SIMPLE_NEAR_Z = 1.0f
+const val SIMPLE_FAR_Z = 8.0f
+
 class Matrix(val values : FloatArray = FloatArray(16)) {
 
     fun set(f : (FloatArray) -> Unit) : Matrix {
@@ -32,14 +35,38 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
                 ) //head is down (set to (0,1,0) to look from the top)
             }
 
+        fun stereoViewMatrix(side: Side, intraOcularDistance: Float, screenZ: Float) : Matrix = identity().set {
+            when(side) {
+                Side.LEFT -> android.opengl.Matrix.setLookAtM(it, 0,
+                    -intraOcularDistance / 2f, 0f, 0.1f,
+                    0f, 0f, screenZ,
+                    0f, 1f, 0f
+                ) //head is down (set to (0,1,0) to look from the top)
+                Side.RIGHT -> android.opengl.Matrix.setLookAtM(it, 0,
+                    intraOcularDistance / 2f, 0f, 0.1f,
+                    0f, 0f, screenZ,
+                    0f, 1f, 0f
+                ) //head is down (set to (0,1,0) to look from the top)
+            }
+        }
 
         fun simpleProjectionMatrix(width: Int, height : Int) : Matrix {
             return identity().set {
                 val ratio = width.toFloat() / height
                 val left = -ratio
-                android.opengl.Matrix.frustumM(it, 0, left, ratio, -1.0f, 1.0f, 1.0f, 8.0f)
+                android.opengl.Matrix.frustumM(it, 0, left, ratio, -1.0f, 1.0f, SIMPLE_NEAR_Z, SIMPLE_FAR_Z)
             }
         }
+
+        fun stereoProjectionMatrix(side: Side, width: Int, height : Int, frustumShift: Float) : Matrix = identity().set {
+            val aspectRatio = width.toFloat() / height
+            when(side) {
+                Side.LEFT -> android.opengl.Matrix.frustumM(it, 0, frustumShift-aspectRatio, frustumShift+aspectRatio, -1.0f, 1.0f, SIMPLE_NEAR_Z, SIMPLE_FAR_Z)
+                Side.RIGHT -> android.opengl.Matrix.frustumM(it, 0, -frustumShift-aspectRatio, -frustumShift+aspectRatio, -1.0f, 1.0f, SIMPLE_NEAR_Z, SIMPLE_FAR_Z)
+            }
+        }
+
+
 
         fun orthographicProjectionMatrix(width: Int, height: Int) : Matrix {
             return identity().set {
@@ -67,6 +94,7 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
 
 
         fun simpleModelViewProjectionMatrix(projectionMatrix : Matrix,
+                                            viewMatrix : Matrix = simpleViewMatrix,
                                             modelMatrix : Matrix = identity(),
                                             worldMatrix : Matrix = identity()) : Matrix =
             projectionMatrix
