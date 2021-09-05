@@ -1,5 +1,6 @@
 package nl.wwbakker.android.app.shapes.characters
 
+import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
@@ -8,6 +9,10 @@ import nl.wwbakker.android.app.shapes.ShapeWithWidth
 abstract class TwoLineShape : ShapeWithWidth {
 
     private val shaders = VertexAndMultiColorShaders
+
+    override fun load(context: Context) {
+        shaders.initiate()
+    }
 
     open fun shouldNormalize() : Boolean { return false }
 

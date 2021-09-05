@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.opengl.GLSurfaceView
 import android.view.MotionEvent
 import androidx.lifecycle.Lifecycle
+import nl.wwbakker.android.app.rendering.FinalAssignmentRenderer
 import nl.wwbakker.android.app.rendering.SingleShapeRenderer
 import nl.wwbakker.android.app.usercontrol.SensorControl
 import nl.wwbakker.android.app.usercontrol.TouchControl
@@ -19,7 +20,7 @@ class MyView(context: Context, lifecycle : Lifecycle) : GLSurfaceView(context) {
         context)
 
     private val sensorControl = SensorControl(context)
-    private val mRenderer = SingleShapeRenderer(touchControl, sensorControl, context)
+    private val mRenderer = FinalAssignmentRenderer(touchControl, sensorControl, context)
     init {
         lifecycle.addObserver(sensorControl)
         setEGLContextClientVersion(2) // Create an OpenGL ES 2.0 context.

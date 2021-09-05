@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.R
 import nl.wwbakker.android.app.data.*
+import nl.wwbakker.android.app.data.textures.Texture
 import nl.wwbakker.android.app.shaders.TexturedLightedShaders
 import kotlin.math.PI
 import kotlin.math.cos
@@ -12,6 +13,7 @@ import kotlin.math.sin
 object WorldLighted : Shape {
 
     private val shaders = TexturedLightedShaders
+    private val texture = Texture()
 
     fun sphereTextureCoords(latitudeResolution: Int, longitudeResolution: Int) =
         Vertices(
@@ -25,13 +27,13 @@ object WorldLighted : Shape {
 
 
     override fun load(context: Context) {
-        shaders.loadTextureFromResourcesOnce(context, R.drawable.world)
+        shaders.initiate()
+        texture.loadFromResources(context, R.drawable.world)
     }
 
     val latitudeResolution = 32
     val longitudeResolution = 32
     val positions = Sphere.spherePositions(latitudeResolution, longitudeResolution, 2f)
-    val normals = positions.generateNormals()
     val textureCoords = sphereTextureCoords(latitudeResolution, longitudeResolution)
     val indices = Sphere.sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(16, 0)
     val lightColor = Vertex4(1f,1f,1f,1f)
@@ -51,7 +53,7 @@ object WorldLighted : Shape {
         shaders.setAttenuation(Vertex3(1f, 0.35f, 0.44f))
         shaders.setModelViewPerspectiveInput(modelViewProjection.matrix)
 
-        shaders.setActiveTexture()
+        shaders.setActiveTexture(texture)
 
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
 

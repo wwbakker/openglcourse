@@ -1,5 +1,6 @@
 package nl.wwbakker.android.app.shapes
 
+import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.Indices
 import nl.wwbakker.android.app.data.Matrix
@@ -10,6 +11,10 @@ import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 class PentagonPrism : Shape {
 
     private val shaders = VertexAndMultiColorShaders
+
+    override fun load(context: Context) {
+        shaders.initiate()
+    }
 
     val points = listOf(
         listOf(0f,1f,1f),

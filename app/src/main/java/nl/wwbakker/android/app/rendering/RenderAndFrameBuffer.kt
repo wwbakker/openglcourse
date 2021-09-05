@@ -2,17 +2,14 @@ package nl.wwbakker.android.app.rendering
 
 import android.opengl.GLES32
 import android.util.Log
-import nl.wwbakker.android.app.data.TextureIndex
+import nl.wwbakker.android.app.data.textures.Texture
 
 class RenderAndFrameBuffer {
     private val frameBufferIds = IntArray(1)
-    private val textureIds = IntArray(1)
     private val renderBufferIds = IntArray(1)
     private var initialized = false
 
-    val textureIndex = TextureIndex.generate()
-    val textureId : Int
-        get() = textureIds[0]
+    val texture = Texture()
 
 
     fun init(width: Int, height: Int) {
@@ -39,7 +36,7 @@ class RenderAndFrameBuffer {
     private fun clean() {
         GLES32.glDeleteRenderbuffers(1, renderBufferIds, 0)
         GLES32.glDeleteFramebuffers(1, frameBufferIds, 0)
-        GLES32.glDeleteTextures(1, textureIds, 0)
+        GLES32.glDeleteTextures(1, texture.handleInArray, 0)
     }
 
     fun bind() {
@@ -57,10 +54,10 @@ class RenderAndFrameBuffer {
     }
 
     private fun generateTexture(pixelFormat: Int, type : Int, width: Int, height: Int) {
-        GLES32.glGenTextures(1, textureIds, 0)
+        GLES32.glGenTextures(1, texture.handleInArray, 0)
 
-        GLES32.glActiveTexture(textureIndex.openGl)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureIds[0])
+        GLES32.glActiveTexture(texture.index.openGl)
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, texture.handle)
 
         GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_NEAREST)
         GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_NEAREST)
@@ -86,7 +83,7 @@ class RenderAndFrameBuffer {
     private fun bindBuffersAndTexture() {
         GLES32.glFramebufferTexture2D(
             GLES32.GL_FRAMEBUFFER, GLES32.GL_COLOR_ATTACHMENT0,
-            GLES32.GL_TEXTURE_2D, textureIds[0], 0
+            GLES32.GL_TEXTURE_2D, texture.handle, 0
         )
         GLES32.glFramebufferRenderbuffer(
             GLES32.GL_FRAMEBUFFER, GLES32.GL_DEPTH_ATTACHMENT,

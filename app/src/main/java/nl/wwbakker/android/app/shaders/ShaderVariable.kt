@@ -90,6 +90,14 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         }
     }
 
+    fun setValue(value: Boolean) {
+        assert(dataType == "bool")
+        if (checkVariableExists()) {
+            GLES32.glUniform1i(handle, if (value) GLES32.GL_TRUE else GLES32.GL_FALSE)
+            checkGlError("glUniform1i")
+        }
+    }
+
     fun setIndex(index : Int) {
         assert(dataType == "sampler2D")
         if (checkVariableExists()) {

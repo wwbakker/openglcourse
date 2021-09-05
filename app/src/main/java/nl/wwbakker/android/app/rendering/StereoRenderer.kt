@@ -27,11 +27,6 @@ class StereoRenderer(private val touchControl: TouchControl,
     val shape = WorldLighted
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
-        VertexAndMultiColorShaders.initiate()
-        PointLightShaders.initiate()
-        DirectionalLightShaders.initiate()
-        PhongLightShaders.initiate()
-        TexturedLightedShaders.initiate()
         FrameBufferShaders.initiate()
         GLES32.glCullFace(GLES32.GL_BACK)
         GLES32.glEnable(GLES32.GL_CULL_FACE)

@@ -3,34 +3,34 @@ package nl.wwbakker.android.app.rendering
 import android.content.Context
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
-import android.util.Log
+import nl.wwbakker.android.app.R
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.ModelViewProjection
-import nl.wwbakker.android.app.data.SIMPLE_NEAR_Z
-import nl.wwbakker.android.app.data.Side
-import nl.wwbakker.android.app.shaders.*
-import nl.wwbakker.android.app.shapes.*
+import nl.wwbakker.android.app.shapes.ImperialCollegeSkybox
+import nl.wwbakker.android.app.shapes.Picture2D
 import nl.wwbakker.android.app.usercontrol.SensorControl
 import nl.wwbakker.android.app.usercontrol.TouchControl
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
-class SingleShapeRenderer(private val touchControl: TouchControl,
-                          private val sensorControl: SensorControl,
-                          private val context: Context) : GLSurfaceView.Renderer {
+class FinalAssignmentRenderer(private val touchControl: TouchControl,
+                              private val sensorControl: SensorControl,
+                              private val context: Context) : GLSurfaceView.Renderer {
 
     lateinit var projectionMatrix : Matrix
     var tick = 0L
-    val shape = WorldLighted
+    val skybox = ImperialCollegeSkybox
+    val gorilla = Picture2D(R.drawable.gorilla, textureContainsTransparency = true)
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         GLES32.glCullFace(GLES32.GL_BACK)
         GLES32.glEnable(GLES32.GL_CULL_FACE)
 
         // Set the background frame color to black
-        GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        shape.load(context)
+        GLES32.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
+        skybox.load(context)
+        gorilla.load(context)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
@@ -53,9 +53,17 @@ class SingleShapeRenderer(private val touchControl: TouchControl,
             touchControl.scaleAndRotationMatrix,
         )
 
-        shape.draw(ModelViewProjection(
+        skybox.draw(ModelViewProjection(
             projectionMatrix,
             worldMatrix = defaultWorldMatrix
         ))
+
+        gorilla.draw(
+            ModelViewProjection(
+            projectionMatrix,
+            worldMatrix = defaultWorldMatrix,
+                modelMatrix = Matrix.translate(0f, 0f, -0.8f)
+        ))
+
     }
 }

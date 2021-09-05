@@ -1,15 +1,19 @@
 package nl.wwbakker.android.app.shapes
 
+import android.content.Context
 import android.opengl.GLES32
-import nl.wwbakker.android.app.data.*
+import nl.wwbakker.android.app.data.ModelViewProjection
+import nl.wwbakker.android.app.data.Vertex3
+import nl.wwbakker.android.app.data.Vertex4
 import nl.wwbakker.android.app.shaders.PhongLightShaders
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
 object SphereLighted : Shape {
 
     private val shaders = PhongLightShaders
+
+    override fun load(context: Context) {
+        shaders.initiate()
+    }
 
     override fun draw(modelViewProjection: ModelViewProjection) {
         val latitudeResolution = 32

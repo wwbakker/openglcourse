@@ -1,5 +1,6 @@
 package nl.wwbakker.android.app.shapes
 
+import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.ModelViewProjection
@@ -9,6 +10,11 @@ import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
 class Pyramid3d : Shape {
 
     private val shaders = VertexAndMultiColorShaders
+
+    override fun load(context: Context) {
+        shaders.initiate()
+    }
+
     // initialize vertex byte buffer for shape coordinates
     val positions = Vertices(arrayOf(
         // front face

@@ -1,5 +1,6 @@
 package nl.wwbakker.android.app.shapes
 
+import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.PointLightShaders
@@ -7,6 +8,10 @@ import nl.wwbakker.android.app.shaders.PointLightShaders
 object PentagonPrismLighted : Shape {
 
     private val shaders = PointLightShaders
+
+    override fun load(context: Context) {
+        shaders.initiate()
+    }
 
     val points = listOf(
         listOf(0f,1f,1f),

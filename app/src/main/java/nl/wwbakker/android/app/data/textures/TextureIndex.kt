@@ -1,4 +1,4 @@
-package nl.wwbakker.android.app.data
+package nl.wwbakker.android.app.data.textures
 
 import android.opengl.GLES32
 

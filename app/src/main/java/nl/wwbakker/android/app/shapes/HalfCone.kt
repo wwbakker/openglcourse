@@ -1,5 +1,6 @@
 package nl.wwbakker.android.app.shapes
 
+import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
@@ -10,6 +11,10 @@ import kotlin.math.sin
 class HalfCone : Shape {
 
     private val shaders = VertexAndMultiColorShaders
+
+    override fun load(context: Context) {
+        shaders.initiate()
+    }
 
     private fun circlePositions(resolution : Int, radius : Float, z : Float) : Vertices {
         val thetaStep : Float = ((2 * PI) / resolution).toFloat()

@@ -1,11 +1,12 @@
 package nl.wwbakker.android.app.shaders
 
-import android.content.Context
-import android.graphics.BitmapFactory
 import android.opengl.GLES32
-import android.opengl.GLUtils
 import nl.wwbakker.android.app.ShaderCompileHelper
-import nl.wwbakker.android.app.data.*
+import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.Vertex3
+import nl.wwbakker.android.app.data.Vertex4
+import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.data.textures.Texture
 import nl.wwbakker.android.app.shaders.Qualifier.*
 import kotlin.properties.Delegates
 
@@ -27,8 +28,6 @@ object TexturedLightedShaders {
     private val aTextureCoordinate = ShaderVariable(Attribute, "vec2", "aTextureCoordinate")
     private val vTextureCoordinate = ShaderVariable(Varying, "vec2", "vTextureCoordinate")
     private val uTextureSampler = ShaderVariable(UniformFragmentShader, "sampler2D", "uTextureSampler")
-    private var textureHandle by Delegates.notNull<Int>()
-    private val textureIndex = TextureIndex.generate()
 
     private val variables = listOf(
         aVertexPosition,
@@ -134,25 +133,10 @@ object TexturedLightedShaders {
         uMaterialShininess.setValue(shininess)
     }
 
-    fun loadTextureFromResourcesOnce(context : Context, textureResource : Int) {
-        val newTextureHandle = arrayOf(0).toIntArray()
-        GLES32.glGenTextures(1, newTextureHandle, 0)
-        assert(newTextureHandle[0] != 0) {"Cannot create texture handle"}
-        val options = BitmapFactory.Options()
-        options.inScaled = false
-        val bitmap = BitmapFactory.decodeResource(context.resources, textureResource)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, newTextureHandle[0])
-        GLUtils.texImage2D(GLES32.GL_TEXTURE_2D, 0, bitmap, 0)
-        bitmap.recycle()
-        textureHandle = newTextureHandle[0]
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D,GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_LINEAR)
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D,GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_NEAREST)
-    }
-
-    fun setActiveTexture() {
-        GLES32.glActiveTexture(textureIndex.openGl)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureHandle)
-        uTextureSampler.setIndex(textureIndex.shader)
+    fun setActiveTexture(texture: Texture) {
+        GLES32.glActiveTexture(texture.index.openGl)
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, texture.handle)
+        uTextureSampler.setIndex(texture.index.shader)
     }
 
 

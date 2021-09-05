@@ -3,7 +3,7 @@ package nl.wwbakker.android.app.data
 import android.opengl.Matrix as GlMatrix
 
 const val SIMPLE_NEAR_Z = 1.0f
-const val SIMPLE_FAR_Z = 8.0f
+const val SIMPLE_FAR_Z = 20.0f
 
 class Matrix(val values : FloatArray = FloatArray(16)) {
 

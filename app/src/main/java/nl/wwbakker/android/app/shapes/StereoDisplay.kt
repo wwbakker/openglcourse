@@ -1,7 +1,10 @@
 package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.data.*
+import nl.wwbakker.android.app.data.Indices
+import nl.wwbakker.android.app.data.Matrix
+import nl.wwbakker.android.app.data.Side
+import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.rendering.RenderAndFrameBuffer
 import nl.wwbakker.android.app.shaders.FrameBufferShaders
 import kotlin.properties.Delegates
@@ -71,11 +74,11 @@ abstract class StereoDisplay {
         shaders.setModelViewPerspectiveInput(mvpMatrix)
 
         GLES32.glViewport(0, 0, halfWidth, height)
-        shaders.setTexture(renderAndFrameBufferLeft.textureId, renderAndFrameBufferLeft.textureIndex)
+        shaders.setTexture(renderAndFrameBufferLeft.texture)
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
 
         GLES32.glViewport(halfWidth, 0, halfWidth, height)
-        shaders.setTexture(renderAndFrameBufferRight.textureId, renderAndFrameBufferRight.textureIndex)
+        shaders.setTexture(renderAndFrameBufferRight.texture)
         GLES32.glDrawElements(GLES32.GL_TRIANGLES, indices.length, GLES32.GL_UNSIGNED_INT, indices.indexBuffer)
     }
 }

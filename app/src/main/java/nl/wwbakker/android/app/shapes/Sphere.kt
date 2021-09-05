@@ -1,8 +1,8 @@
 package nl.wwbakker.android.app.shapes
 
+import android.content.Context
 import android.opengl.GLES32
 import nl.wwbakker.android.app.data.Indices
-import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.ModelViewProjection
 import nl.wwbakker.android.app.data.Vertices
 import nl.wwbakker.android.app.shaders.VertexAndMultiColorShaders
@@ -14,6 +14,10 @@ import kotlin.math.sin
 object Sphere : Shape {
 
     private val shaders = VertexAndMultiColorShaders
+
+    override fun load(context: Context) {
+        shaders.initiate()
+    }
 
     fun spherePositions(latitudeResolution : Int, longitudeResolution : Int, radius : Float) =
         Vertices(values =
@@ -32,16 +36,21 @@ object Sphere : Shape {
             }
         }.flatten().toFloatArray(), valuesPerVertex = 3)
 
-    fun sphereIndices(latitudeResolution : Int, longitudeResolution : Int) =
-        Indices(values =
-            (0 until latitudeResolution).flatMap { latitude ->
-                (0 until longitudeResolution - 1).map { longitude ->
-                    val p0 = ((longitude * latitudeResolution) + latitude) % (longitudeResolution * latitudeResolution)
-                    val p1 = p0 + latitudeResolution
-                    listOf(p0, p0 + 1, p1, p1, p0 + 1, (p1 + 1) % (latitudeResolution * longitudeResolution))
-                }
-            }.flatten().toIntArray()
-        )
+    fun sphereIndices(latitudeResolution : Int, longitudeResolution : Int, reversed : Boolean = false) : Indices {
+        val values = (0 until latitudeResolution).flatMap { latitude ->
+            (0 until longitudeResolution - 1).map { longitude ->
+                val p0 = ((longitude * latitudeResolution) + latitude) % (longitudeResolution * latitudeResolution)
+                val p1 = p0 + latitudeResolution
+                listOf(p0, p0 + 1, p1, p1, p0 + 1, (p1 + 1) % (latitudeResolution * longitudeResolution))
+            }
+        }.flatten()
+        return if (reversed) {
+            Indices(values.reversed().toIntArray())
+        } else {
+            Indices(values.toIntArray())
+        }
+    }
+
 
     fun sphereColors(latitudeResolution : Int, longitudeResolution : Int) =
         Vertices(values =
