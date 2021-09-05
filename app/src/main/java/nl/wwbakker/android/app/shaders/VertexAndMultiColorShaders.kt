@@ -1,10 +1,10 @@
 package nl.wwbakker.android.app.shaders
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.rendering.MyRenderer
 import nl.wwbakker.android.app.ShaderCompileHelper
 import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.Vertices
+import nl.wwbakker.android.app.rendering.checkGlError
 import kotlin.properties.Delegates
 
 object VertexAndMultiColorShaders {
@@ -44,7 +44,7 @@ object VertexAndMultiColorShaders {
 
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES32.glGetUniformLocation(mProgram, "uMVPMatrix")
-        MyRenderer.checkGlError("glGetUniformLocation")
+        checkGlError("glGetUniformLocation")
     }
 
     fun use() {
@@ -57,11 +57,11 @@ object VertexAndMultiColorShaders {
             mColorHandle, vertices.valuesPerVertex,
             GLES32.GL_FLOAT, false, vertices.vertexStride, vertices.vertexBuffer
         )
-        MyRenderer.checkGlError("glVertexAttribPointer")
+        checkGlError("glVertexAttribPointer")
     }
     fun setModelViewPerspectiveInput(mvpMatrix : Matrix) {
         GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix.values, 0)
-        MyRenderer.checkGlError("glUniformMatrix4fv")
+        checkGlError("glUniformMatrix4fv")
     }
 
     fun setPositionInput(vertices: Vertices) {
@@ -70,7 +70,7 @@ object VertexAndMultiColorShaders {
             mPositionHandle, vertices.valuesPerVertex,
             GLES32.GL_FLOAT, false, vertices.vertexStride, vertices.vertexBuffer
         )
-        MyRenderer.checkGlError("glVertexAttribPointer")
+        checkGlError("glVertexAttribPointer")
     }
 
 }

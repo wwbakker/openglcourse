@@ -17,7 +17,7 @@ object WorldLighted : Shape {
         Vertices(
             (0 until latitudeResolution).flatMap { latitude ->
                 (0 until longitudeResolution).map { longitude ->
-                    listOf(1f - longitude.toFloat() / longitudeResolution, latitude.toFloat() / latitudeResolution)
+                    listOf(1f - longitude.toFloat() / (longitudeResolution - 1), latitude.toFloat() / latitudeResolution)
                 }
             }.flatten().toFloatArray(),
             2

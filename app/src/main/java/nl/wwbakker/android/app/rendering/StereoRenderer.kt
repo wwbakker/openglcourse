@@ -16,9 +16,9 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
-class MyRenderer(private val touchControl: TouchControl,
-                 private val sensorControl: SensorControl,
-                 private val context: Context) : GLSurfaceView.Renderer {
+class StereoRenderer(private val touchControl: TouchControl,
+                     private val sensorControl: SensorControl,
+                     private val context: Context) : GLSurfaceView.Renderer {
 
     lateinit var projectionMatrix : Matrix
     var tick = 0L
@@ -86,25 +86,5 @@ class MyRenderer(private val touchControl: TouchControl,
 //        GLES32.glEnable(GLES32.GL_DEPTH_TEST) //enable depth test (so, it will not look through the surfaces)
 //        GLES32.glDepthFunc(GLES32.GL_LEQUAL) //indicate what type of depth test
         frameBufferDisplay.draw()
-    }
-
-    companion object {
-        fun checkGlError(glOperation: String) {
-            var error: Int
-            if (GLES32.glGetError().also { error = it } != GLES32.GL_NO_ERROR) {
-                Log.e("MyRenderer", "$glOperation: glError $error")
-            }
-        }
-
-        fun loadShader(type: Int, shaderCode: String?): Int {
-            // create a vertex shader  (GLES32.GL_VERTEX_SHADER) or a fragment shader (GLES32.GL_FRAGMENT_SHADER)
-            val shader = GLES32.glCreateShader(type)
-            GLES32.glShaderSource(
-                shader,
-                shaderCode
-            ) // add the source code to the shader and compile it
-            GLES32.glCompileShader(shader)
-            return shader
-        }
     }
 }

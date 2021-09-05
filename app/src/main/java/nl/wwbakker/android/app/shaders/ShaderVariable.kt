@@ -2,8 +2,8 @@ package nl.wwbakker.android.app.shaders
 
 import android.opengl.GLES32
 import android.util.Log
-import nl.wwbakker.android.app.rendering.MyRenderer
 import nl.wwbakker.android.app.data.*
+import nl.wwbakker.android.app.rendering.checkGlError
 import kotlin.properties.Delegates
 
 enum class Qualifier(val value : String) {
@@ -25,11 +25,11 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         when(qualifier) {
             Qualifier.UniformVertexShader, Qualifier.UniformFragmentShader -> {
                 handle = GLES32.glGetUniformLocation(programHandle, name)
-                MyRenderer.checkGlError("glGetUniformLocation")
+                checkGlError("glGetUniformLocation")
             }
             Qualifier.Attribute -> {
                 handle = GLES32.glGetAttribLocation(programHandle, name)
-                MyRenderer.checkGlError("glGetAttribLocation")
+                checkGlError("glGetAttribLocation")
             }
             else -> {
                 // do nothing
@@ -54,7 +54,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
                 GLES32.GL_FLOAT, false, vertices.vertexStride, vertices.vertexBuffer
             )
             GLES32.glEnableVertexAttribArray(handle)
-            MyRenderer.checkGlError("glVertexAttribPointer")
+            checkGlError("glVertexAttribPointer")
         }
     }
 
@@ -62,7 +62,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         assert(dataType == "mat4")
         if (checkVariableExists()) {
             GLES32.glUniformMatrix4fv(handle, 1, false, matrix.values, 0)
-            MyRenderer.checkGlError("glUniformMatrix4fv")
+            checkGlError("glUniformMatrix4fv")
         }
     }
 
@@ -70,7 +70,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         assert(dataType == "vec3")
         if (checkVariableExists()) {
             GLES32.glUniform3fv(handle, 1, position.floatArray, 0)
-            MyRenderer.checkGlError("glUniform3fv")
+            checkGlError("glUniform3fv")
         }
     }
 
@@ -78,7 +78,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         assert(dataType == "vec4")
         if (checkVariableExists()) {
             GLES32.glUniform4fv(handle, 1, position.floatArray, 0)
-            MyRenderer.checkGlError("glUniform4fv")
+            checkGlError("glUniform4fv")
         }
     }
 
@@ -86,7 +86,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         assert(dataType == "float")
         if (checkVariableExists()) {
             GLES32.glUniform1f(handle, value)
-            MyRenderer.checkGlError("glUniform1f")
+            checkGlError("glUniform1f")
         }
     }
 
@@ -94,7 +94,7 @@ data class ShaderVariable(val qualifier: Qualifier, val dataType: String, val na
         assert(dataType == "sampler2D")
         if (checkVariableExists()) {
             GLES32.glUniform1i(handle, index)
-            MyRenderer.checkGlError("glUniform1i")
+            checkGlError("glUniform1i")
         }
     }
 }

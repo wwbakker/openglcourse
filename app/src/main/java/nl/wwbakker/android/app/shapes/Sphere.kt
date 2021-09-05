@@ -22,7 +22,7 @@ object Sphere : Shape {
             val sinTheta = sin(theta)
             val cosTheta = cos(theta)
             (0 until longitudeResolution).map { longitude ->
-                val phi = longitude * 2 * PI / longitudeResolution
+                val phi = longitude * 2 * PI / (longitudeResolution - 1)
                 val sinPhi = sin(phi)
                 val cosPhi = cos(phi)
                 val x = cosPhi * sinTheta
@@ -61,8 +61,6 @@ object Sphere : Shape {
         val colors = sphereColors(latitudeResolution, longitudeResolution)
 
         val indices = sphereIndices(latitudeResolution, longitudeResolution)//.debugSubArray(60, 0)
-
-//        positions.printByIndex(indices)
 
         shaders.use()
         shaders.setPositionInput(positions)

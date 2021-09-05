@@ -1,9 +1,9 @@
 package nl.wwbakker.android.app.shapes
 
 import android.opengl.GLES32
-import nl.wwbakker.android.app.rendering.MyRenderer
-import nl.wwbakker.android.app.data.Matrix
 import nl.wwbakker.android.app.data.ModelViewProjection
+import nl.wwbakker.android.app.rendering.checkGlError
+import nl.wwbakker.android.app.rendering.loadShader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -43,8 +43,8 @@ class Triangle : Shape {
         vertexBuffer.position(0)
         vertexCount = triangleVertex.size / COORDS_PER_VERTEX
         // prepare shaders and OpenGL program
-        val vertexShader = MyRenderer.loadShader(GLES32.GL_VERTEX_SHADER, vertexShaderCode)
-        val fragmentShader = MyRenderer.loadShader(GLES32.GL_FRAGMENT_SHADER, fragmentShaderCode)
+        val vertexShader = loadShader(GLES32.GL_VERTEX_SHADER, vertexShaderCode)
+        val fragmentShader = loadShader(GLES32.GL_FRAGMENT_SHADER, fragmentShaderCode)
         mProgram = GLES32.glCreateProgram() // create empty OpenGL Program
         GLES32.glAttachShader(mProgram, vertexShader) // add the vertex shader to program
         GLES32.glAttachShader(mProgram, fragmentShader) // add the fragment shader to program
@@ -56,14 +56,14 @@ class Triangle : Shape {
         GLES32.glEnableVertexAttribArray(mPositionHandle)
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES32.glGetUniformLocation(mProgram, "uMVPMatrix")
-        MyRenderer.checkGlError("glGetUniformLocation")
+        checkGlError("glGetUniformLocation")
     }
 
 
     override fun draw(modelViewProjection: ModelViewProjection) {
         // Apply the projection and view transformation
         GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, modelViewProjection.matrix.values, 0)
-        MyRenderer.checkGlError("glUniformMatrix4fv")
+        checkGlError("glUniformMatrix4fv")
         //set the attribute of the vertex to point to the vertex buffer
         GLES32.glVertexAttribPointer(
             mPositionHandle, COORDS_PER_VERTEX,
