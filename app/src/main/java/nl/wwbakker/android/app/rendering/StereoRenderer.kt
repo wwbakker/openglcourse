@@ -27,7 +27,7 @@ class StereoRenderer(private val touchControl: TouchControl,
     val shape = WorldLighted
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
-        FrameBufferShaders.initiate()
+        frameBufferDisplay.load(context)
         GLES32.glCullFace(GLES32.GL_BACK)
         GLES32.glEnable(GLES32.GL_CULL_FACE)
 
@@ -48,13 +48,15 @@ class StereoRenderer(private val touchControl: TouchControl,
         override fun drawUnto(side: Side) {
             val intraOcularDistance = 0.8f
             val screenZ = -10f
+            val depthZ = -5f
             val frustrumShift = -(intraOcularDistance / 2) * SIMPLE_NEAR_Z / screenZ
             val modelTranslationX = intraOcularDistance / 2f
 
-
             GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+            GLES32.glClearColor(0.2f, 0.2f, 0.2f, 1.0f)
+
             val stereoProjectionMatrix =
-                Matrix.stereoProjectionMatrix(side, width, height, frustrumShift)
+                Matrix.stereoProjectionMatrix(side, halfWidth, height, frustrumShift)
             val defaultWorldMatrix = Matrix.multiply(
                 Matrix.translate(z = -2f),
                 sensorControl.rotationMatrix,
@@ -62,7 +64,11 @@ class StereoRenderer(private val touchControl: TouchControl,
             )
             val stereoViewMatrix = Matrix.stereoViewMatrix(side, intraOcularDistance, screenZ)
             val modelMatrix =
-                Matrix.translate(x = if (side == Side.LEFT) modelTranslationX else -modelTranslationX)
+                Matrix.multiply(
+                    Matrix.translate(
+                        x = if (side == Side.LEFT) modelTranslationX else -modelTranslationX,
+                        z = depthZ)
+                )
 
             shape.draw(ModelViewProjection(
                 stereoProjectionMatrix,

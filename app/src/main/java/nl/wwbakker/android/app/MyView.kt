@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import androidx.lifecycle.Lifecycle
 import nl.wwbakker.android.app.rendering.FinalAssignmentRenderer
 import nl.wwbakker.android.app.rendering.SingleShapeRenderer
+import nl.wwbakker.android.app.rendering.StereoRenderer
 import nl.wwbakker.android.app.usercontrol.SensorControl
 import nl.wwbakker.android.app.usercontrol.TouchControl
 import java.util.*
