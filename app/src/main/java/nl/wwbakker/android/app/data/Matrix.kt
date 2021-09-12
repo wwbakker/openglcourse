@@ -98,7 +98,7 @@ class Matrix(val values : FloatArray = FloatArray(16)) {
                                             modelMatrix : Matrix = identity(),
                                             worldMatrix : Matrix = identity()) : Matrix =
             projectionMatrix
-                .multiply(simpleViewMatrix)
+                .multiply(viewMatrix)
                 .multiply(modelMatrix)
                 .multiply(worldMatrix)
 

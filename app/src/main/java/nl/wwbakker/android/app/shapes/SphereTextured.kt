@@ -7,6 +7,7 @@ import nl.wwbakker.android.app.R
 import nl.wwbakker.android.app.data.*
 import nl.wwbakker.android.app.data.textures.Texture
 import nl.wwbakker.android.app.shaders.TexturedShaders
+import java.lang.Float.max
 
 object WorldTextured : SphereTextured(textureResource = R.drawable.world)
 object ImperialCollegeSkybox : SphereTextured(
@@ -14,6 +15,7 @@ object ImperialCollegeSkybox : SphereTextured(
     ambientBrightness = 0.6f,
     radius = 10f,
     cameraIsInside = true,
+    flattenFloor = true,
 )
 
 open class SphereTextured(
@@ -21,6 +23,7 @@ open class SphereTextured(
     private val ambientBrightness : Float = 1f,
     cameraIsInside : Boolean = false,
     radius : Float = 2f,
+    flattenFloor : Boolean = false
     ) : Shape {
 
     private val shaders = TexturedShaders
@@ -44,7 +47,14 @@ open class SphereTextured(
     }
 
 
-    val positions = Sphere.spherePositions(latitudeResolution, longitudeResolution, radius)
+    val positions = run {
+        val spherePositions = Sphere.spherePositions(latitudeResolution, longitudeResolution, radius)
+        if (flattenFloor)
+            spherePositions.toVertex3List().map { v -> v.copy(y = max(0f, v.y)) }.toVertices()
+        else
+            spherePositions
+    }
+
     val indices = Sphere.sphereIndices(latitudeResolution, longitudeResolution, cameraIsInside)//.debugSubArray(16, 0)
 
     override fun draw(modelViewProjection: ModelViewProjection) {

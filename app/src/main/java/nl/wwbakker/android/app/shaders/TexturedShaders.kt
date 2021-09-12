@@ -18,6 +18,7 @@ object TexturedShaders {
     private val vTextureCoordinate = ShaderVariable(Varying, "vec2", "vTextureCoordinate")
     private val uTextureSampler = ShaderVariable(UniformFragmentShader, "sampler2D", "uTextureSampler")
     private val uTransparentTexture = ShaderVariable(UniformFragmentShader, "bool", "uTransparentTexture")
+    private val uTransparencyColor = ShaderVariable(UniformFragmentShader, "vec4", "uTransparencyColor")
 
     private val variables = listOf(
         aVertexPosition,
@@ -27,6 +28,7 @@ object TexturedShaders {
         vTextureCoordinate,
         uTextureSampler,
         uTransparentTexture,
+        uTransparencyColor,
     )
 
     private val vertexShaderCode =
@@ -40,7 +42,10 @@ object TexturedShaders {
            ${variables.fragmentShaderDefinitions()}
            void main() {
                 vec4 fragmentColor = texture2D(uTextureSampler,vec2(vTextureCoordinate.s,vTextureCoordinate.t));
-                if (uTransparentTexture && fragmentColor.r<0.01 && fragmentColor.g<0.01 && fragmentColor.b<0.01) discard;
+                if (uTransparentTexture && 
+                    fragmentColor.r < uTransparencyColor.r + 0.01 && fragmentColor.r > uTransparencyColor.r - 0.01 && 
+                    fragmentColor.g < uTransparencyColor.g + 0.01 && fragmentColor.g > uTransparencyColor.g - 0.01 &&
+                    fragmentColor.b < uTransparencyColor.b + 0.01 && fragmentColor.b > uTransparencyColor.b - 0.01) discard;
                 gl_FragColor = fragmentColor*uAmbientColor;
            }""".trimIndent()
 
@@ -81,4 +86,9 @@ object TexturedShaders {
     fun setTextureTransparency(textureContainsTransparency : Boolean) {
         uTransparentTexture.setValue(textureContainsTransparency)
     }
+
+    fun setTransparencyColor(color: Vertex4) {
+        uTransparencyColor.setValue(color)
+    }
+
 }
